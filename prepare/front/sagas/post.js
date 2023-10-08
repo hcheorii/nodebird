@@ -8,6 +8,8 @@ import {
     ADD_COMMENT_REQUEST,
     ADD_COMMENT_SUCCESS,
 } from "../reducers/post";
+
+//게시글 작성
 function addPostAPI() {
     return axios.post("/api/post");
 }
@@ -25,6 +27,8 @@ function* addPost(action) {
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
 }
+
+//댓글작성
 
 function addCommentAPI(data) {
     return axios.post(`/api/post/${data.postId}/comment`, data);

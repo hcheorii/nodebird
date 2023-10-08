@@ -47,7 +47,7 @@ export const initialValue = {
     addCommentDone: false,
     addCommentError: null,
 };
-//가짜 데이토
+//가짜 데이터
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -88,6 +88,7 @@ const dummyComment = (data) => ({
 
 const reducer = (state = initialValue, action) => {
     switch (action.type) {
+        //게시글 추가
         case ADD_POST_REQUEST:
             return {
                 ...state,
@@ -109,6 +110,8 @@ const reducer = (state = initialValue, action) => {
                 addPostLoading: false,
                 addPostError: action.error,
             };
+
+        //댓글 추가
         case ADD_COMMENT_REQUEST:
             return {
                 ...state,
@@ -127,8 +130,8 @@ const reducer = (state = initialValue, action) => {
                 ...post.Comments,
             ]; //얕은 복사
             const mainPosts = [...state.mainPosts];
-            mainPosts[postIndex] = post;   //댓글 추가하는 부분 너무어려움..
-            //이걸 편하게 하려면 
+            mainPosts[postIndex] = post; //댓글 추가하는 부분 너무어려움..
+            //이걸 편하게 하려면
 
             return {
                 ...state,

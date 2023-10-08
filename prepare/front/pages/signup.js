@@ -15,7 +15,7 @@ const Signup = () => {
 
     const dispatch = useDispatch();
 
-    const [ , onChangeEmail] = useInput("");
+    const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");
     const [nickname, onChangeNickname] = useInput("");
 

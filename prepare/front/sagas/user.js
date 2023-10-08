@@ -1,4 +1,4 @@
-import { all, fork } from "redux-saga/effects";
+import { all, fork, takeLatest, delay, put } from "redux-saga/effects";
 
 import {
     LOG_IN_SUCCESS,
@@ -12,6 +12,7 @@ import {
     SIGN_UP_FAILURE,
 } from "../reducers/user";
 
+// 로그인
 function logInAPI(data) {
     //실제로 서버에 요청을 보내는 부분
     return axios.post("/api/login", data);
@@ -27,7 +28,18 @@ function* logIn(action) {
         put({ type: LOG_IN_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
     }
 }
+function* watchLogIn() {
+    //액션을 감시하고 필요한 작업을 수행하는데에 사용.
+    //이벤트 리스터 같은 역할.
+    yield takeLatest(LOG_IN_REQUEST, logIn); //LOG_IN이라는 액션이 실행되면, logIn함수를 실행시킨다.
 
+    //take는 일회용이다. takeEvery는 계속 받을 수 있다. 하지만 여러번 입력을 한번에 하게되면 그 여러개 요청이 모두 가기 때문에
+    //takeLatest를 사용한다.
+    //완료되지 않은 것들 중에서 로딩중인것들을 중단. 응답을 취소.
+    //throttle은 초를 정해서 그 안에서는 요청은 한번만 할 수 있게 설정할 수 있다.
+}
+
+//로그아웃
 function* watchLogOut() {
     yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
@@ -46,6 +58,8 @@ function* logOut() {
     }
 }
 
+//회원가입
+
 function signUpAPI() {
     return axios("/api/signup");
 }
@@ -60,17 +74,6 @@ function* signUp(action) {
     } catch (err) {
         put({ type: SIGN_UP_FAILURE, error: err.response.data });
     }
-}
-
-function* watchLogIn() {
-    //액션을 감시하고 필요한 작업을 수행하는데에 사용.
-    //이벤트 리스터 같은 역할.
-    yield takeLatest(LOG_IN_REQUEST, logIn); //LOG_IN이라는 액션이 실행되면, logIn함수를 실행시킨다.
-
-    //take는 일회용이다. takeEvery는 계속 받을 수 있다. 하지만 여러번 입력을 한번에 하게되면 그 여러개 요청이 모두 가기 때문에
-    //takeLatest를 사용한다.
-    //완료되지 않은 것들 중에서 로딩중인것들을 중단. 응답을 취소.
-    //throttle은 초를 정해서 그 안에서는 요청은 한번만 할 수 있게 설정할 수 있다.
 }
 
 export default function* userSaga() {

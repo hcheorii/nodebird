@@ -18,7 +18,7 @@ const CommentForm = ({ post }) => {
         if (addCommentDone) {
             setCommentText("");
         }
-    }, [addCommentDone]);
+    }, [addCommentDone]); //댓글 다 올라갔을 때 done응답이 오면 초기화해주기
 
     const onSubmitComment = useCallback(() => {
         console.log(post.id, commentText);

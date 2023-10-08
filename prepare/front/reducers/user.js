@@ -44,6 +44,7 @@ export const UNFOLLOW_REQUEST = "UNFOLLOW_REQUEST";
 export const UNFOLLOW_SUCCESS = "UNFOLLOW_SUCCESS";
 export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 
+//함수
 const dummyUser = (data) => ({
     ...data,
     nickname: "hyeon cheol lee",
@@ -66,20 +67,9 @@ export const logoutRequestAction = (data) => {
     };
 };
 
-export const logoutSuccessAction = (data) => {
-    return {
-        type: LOG_OUT_SUCCESS,
-    };
-};
-
-export const logoutFailureAction = (data) => {
-    return {
-        type: LOG_OUT_FAILURE,
-    };
-};
-
 export default (state = initialValue, action) => {
     switch (action.type) {
+        //로그인
         case LOG_IN_REQUEST:
             return {
                 ...state,
@@ -89,6 +79,7 @@ export default (state = initialValue, action) => {
             };
         case LOG_IN_SUCCESS:
             return {
+                ...state,
                 logInLoading: false,
                 logInDone: true,
                 me: dummyUser(action.data), //더미데이터
@@ -99,6 +90,7 @@ export default (state = initialValue, action) => {
                 logInLoading: false,
                 logInError: action.error,
             };
+        //로그아웃
         case LOG_OUT_REQUEST:
             return {
                 ...state,
@@ -120,6 +112,7 @@ export default (state = initialValue, action) => {
                 logOutError: action.error,
             };
 
+        //회원가입
         case SIGN_UP_REQUEST:
             return {
                 ...state,
@@ -139,6 +132,8 @@ export default (state = initialValue, action) => {
                 signUpLoading: false, //로그아웃 시도중
                 signUpError: action.error,
             };
+
+        //닉네임 변경
         case CHANGE_NICKNAME_REQUEST:
             return {
                 ...state,
