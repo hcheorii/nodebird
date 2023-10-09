@@ -1,5 +1,6 @@
 import shortId from "shortid";
 import { produce } from "immer";
+import faker from "faker";
 
 export const initialValue = {
     mainPosts: [
@@ -61,6 +62,33 @@ export const initialValue = {
 };
 //가짜 데이터
 
+//concat은 두개 이상의 배열을 합칠 때 사용
+initialValue.mainPosts = initialValue.mainPosts.concat(
+    Array(20)
+        .fill()
+        .map(() => ({
+            id: shortId.generate(),
+            User: {
+                id: shortId.generate(),
+                nickname: faker.name.findName(),
+            },
+            content: faker.lorem.paragraph(), //아무 문장,
+            Images: [
+                {
+                    src: faker.image.imageUrl(),
+                },
+            ],
+            Comments: [
+                {
+                    User: {
+                        id: shortId.generate(),
+                        nickname: faker.name.findName(),
+                    },
+                    content: faker.lorem.sentence(),
+                },
+            ],
+        }))
+);
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
