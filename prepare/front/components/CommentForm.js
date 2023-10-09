@@ -26,7 +26,8 @@ const CommentForm = ({ post }) => {
             type: ADD_COMMENT_REQUEST,
             data: { content: commentText, postId: post.id, userId: id },
         });
-    }, [commentText, id]);
+    }, [commentText, id]); //댓글을 추가하려면 id를 통해서 해당 게시글을 찾고 그 해당하는 게시글의
+    //Comments로 이동
     return (
         <Form onFinish={onSubmitComment}>
             <Form.Item style={{ position: "relative", margin: 0 }}>

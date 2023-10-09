@@ -1,5 +1,6 @@
 import { all, delay, fork, put } from "redux-saga/effects";
 import { takeLatest } from "redux-saga/effects";
+import shortId from "shortid";
 import {
     ADD_POST_FAILURE,
     ADD_POST_REQUEST,
@@ -9,6 +10,8 @@ import {
     ADD_COMMENT_SUCCESS,
 } from "../reducers/post";
 
+import { ADD_POST_TO_ME } from "../reducers/user";
+
 //게시글 작성
 function addPostAPI() {
     return axios.post("/api/post");
@@ -17,8 +20,16 @@ function addPostAPI() {
 function* addPost(action) {
     try {
         yield delay(1000);
+        const id = shortId.generate();
         // const result = yield call(addPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
-        yield put({ type: ADD_POST_SUCCESS, data: action.data });
+        yield put({
+            type: ADD_POST_SUCCESS,
+            data: {
+                id,
+                content: action.data,
+            },
+        });
+        yield put({ type: ADD_POST_TO_ME, data: id });
     } catch (err) {
         put({ type: ADD_POST_FAILURE, data: err.response.data });
     }

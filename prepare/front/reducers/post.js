@@ -11,24 +11,31 @@ export const initialValue = {
             content: "첫 번째 게시글 #해시태그 #익스프레스",
             Images: [
                 {
+                    id: shortId.generate(),
                     src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
                 },
                 {
+                    id: shortId.generate(),
                     src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
                 },
                 {
+                    id: shortId.generate(),
                     src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
                 },
             ],
             Comments: [
                 {
+                    id: shortId.generate(),
                     User: {
+                        id: shortId.generate(),
                         nickname: "nero",
                     },
                     content: "우와 개정판이 나왔군요~",
                 },
                 {
+                    id: shortId.generate(),
                     User: {
+                        id: shortId.generate(),
                         nickname: "hero",
                     },
                     content: "얼른 사고싶어요~",
@@ -67,8 +74,8 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-    id: shortId.generate(), //더미데이터여도 계속 같은 값이 들어가면 안되니까 랜덤으로 생성.
-    content: data,
+    id: data.id,
+    content: data.content,
     User: {
         id: 1,
         nickname: "이현철",
@@ -134,6 +141,7 @@ const reducer = (state = initialValue, action) => {
             const mainPosts = [...state.mainPosts];
             mainPosts[postIndex] = post; //댓글 추가하는 부분 너무어려움..
             //불변성을 지키다 보니 가독성이 너무 안좋음
+            //
 
             return {
                 ...state,
