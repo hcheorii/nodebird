@@ -66,8 +66,6 @@ function* watchAddComment() {
 function removePostAPI() {
     return axios.post("/api/post");
 }
-asd;
-
 function* removePost(action) {
     try {
         yield delay(1000);

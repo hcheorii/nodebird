@@ -12,6 +12,7 @@
         "@ant-design/icons": "^5.2.6",
         "antd": "^4.24.14",
         "cross-env": "^7.0.3",
+        "immer": "^10.0.3",
         "next": "^9.5.5",
         "next-redux-wrapper": "^8.1.0",
         "react-slick": "^0.29.0",

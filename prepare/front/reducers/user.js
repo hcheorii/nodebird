@@ -1,3 +1,5 @@
+import { produce } from "immer";
+
 export const initialValue = {
     logInLoading: false, //로그인 시도중
     logInDone: false,
@@ -79,109 +81,96 @@ export const logoutRequestAction = (data) => {
 };
 
 export default (state = initialValue, action) => {
-    switch (action.type) {
-        //로그인
-        case LOG_IN_REQUEST:
-            return {
-                ...state,
-                logInLoading: true,
-                logInError: null,
-                logInDone: false,
-            };
-        case LOG_IN_SUCCESS:
-            return {
-                ...state,
-                logInLoading: false,
-                logInDone: true,
-                me: dummyUser(action.data), //더미데이터
-            };
-        case LOG_IN_FAILURE:
-            return {
-                ...state,
-                logInLoading: false,
-                logInError: action.error,
-            };
-        //로그아웃
-        case LOG_OUT_REQUEST:
-            return {
-                ...state,
-                logOutLoading: true, //로그아웃 시도중
-                logOutDone: false,
-                logOutError: null,
-            };
-        case LOG_OUT_SUCCESS:
-            return {
-                ...state,
-                logOutLoading: false, //로그아웃 시도중
-                logOutDone: true,
-                me: null,
-            };
-        case LOG_OUT_FAILURE:
-            return {
-                ...state,
-                logOutLoading: false, //로그아웃 시도중
-                logOutError: action.error,
-            };
+    //리듀서란 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(단, 불변성은 지키면서)
+    //draft는 불변성 상관없이 바꾸면 immer가 알아서 불변성있게 만들어준다.
+    return produce(state, (draft) => {
+        switch (action.type) {
+            //로그인
+            case LOG_IN_REQUEST:
+                draft.logInLoading = true;
+                draft.logInError = null;
+                draft.logInDone = false;
+                break;
+            case LOG_IN_SUCCESS:
+                draft.logInLoading = false;
+                draft.logInDone = true;
+                draft.me = dummyUser(action.data); //더미데이터
+                break;
+            case LOG_IN_FAILURE:
+                draft.logInLoading = false;
+                draft.logInError = action.error;
+                break;
+            //로그아웃
+            case LOG_OUT_REQUEST:
+                draft.logOutLoading = true; //로그아웃 시도중
+                draft.logOutDone = false;
+                draft.logOutError = null;
+                break;
+            case LOG_OUT_SUCCESS:
+                draft.logOutLoading = false; //로그아웃 시도중
+                draft.logOutDone = true;
+                draft.me = null;
+                break;
+            case LOG_OUT_FAILURE:
+                draft.logOutLoading = false; //로그아웃 시도중
+                draft.logOutError = action.error;
+                break;
+            //회원가입
+            case SIGN_UP_REQUEST:
+                draft.signUpLoading = true; //로그아웃 시도중
+                draft.signUpDone = false;
+                draft.signUpError = null;
+                break;
+            case SIGN_UP_SUCCESS:
+                draft.signUpLoading = false; //로그아웃 시도중
+                draft.signUpDone = true;
+                break;
+            case SIGN_UP_FAILURE:
+                draft.signUpLoading = false; //로그아웃 시도중
+                draft.signUpError = action.error;
+                break;
 
-        //회원가입
-        case SIGN_UP_REQUEST:
-            return {
-                ...state,
-                signUpLoading: true, //로그아웃 시도중
-                signUpDone: false,
-                signUpError: null,
-            };
-        case SIGN_UP_SUCCESS:
-            return {
-                ...state,
-                signUpLoading: false, //로그아웃 시도중
-                signUpDone: true,
-            };
-        case SIGN_UP_FAILURE:
-            return {
-                ...state,
-                signUpLoading: false, //로그아웃 시도중
-                signUpError: action.error,
-            };
+            //닉네임 변경
+            case CHANGE_NICKNAME_REQUEST:
+                draft.changeNicknameLoading = true; //로그아웃 시도중
+                draft.changeNicknameDone = false;
+                draft.changeNicknameError = null;
+                break;
+            case CHANGE_NICKNAME_SUCCESS:
+                draft.changeNicknameLoading = false; //로그아웃 시도중
+                draft.changeNicknameDone = true;
+                break;
+            case CHANGE_NICKNAME_FAILURE:
+                draft.changeNicknameLoading = false; //로그아웃 시도중
+                draft.changeNicknameError = action.error;
+                break;
 
-        //닉네임 변경
-        case CHANGE_NICKNAME_REQUEST:
-            return {
-                ...state,
-                changeNicknameLoading: true, //로그아웃 시도중
-                changeNicknameDone: false,
-                changeNicknameError: null,
-            };
-        case CHANGE_NICKNAME_SUCCESS:
-            return {
-                ...state,
-                changeNicknameLoading: false, //로그아웃 시도중
-                changeNicknameDone: true,
-            };
-        case CHANGE_NICKNAME_FAILURE:
-            return {
-                ...state,
-                changeNicknameLoading: false, //로그아웃 시도중
-                changeNicknameError: action.error,
-            };
+            case ADD_POST_TO_ME:
+                draft.me.Posts.unshift({ id: action.data });
+            // return {
+            //     ...state,
+            //     me: {
+            //         ...state.me,
+            //         Posts: [{ id: action.data }, ...state.me.Posts],
+            //     },
+            // };
+            case REMOVE_POST_OF_ME:
+                draft.me.Posts = draft.me.Posts.filter(
+                    (v) => v.id !== action.data
+                );
+                break;
+            // return {
+            //     ...state,
+            //     me: {
+            //         ...state.me,
+            //         Posts: state.me.Posts.filter(
+            //             (v) => v.id !== action.data
+            //         ),
+            //     },
+            // };
 
-        case ADD_POST_TO_ME:
-            return {
-                ...state,
-                me: {
-                    ...state.me,
-                    Posts: [{ id: action.data }, ...state.me.Posts],
-                },
-            };
-        case REMOVE_POST_OF_ME:
-            return {
-                ...state,
-                me: {
-                    ...state.me,
-                    Posts: state.me.Posts.filter((v) => v.id !== action.data),
-                },
-            };
-        default:
-            return state;
-    }
+            default:
+                break;
+        }
+    });
 };

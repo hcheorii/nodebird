@@ -1,4 +1,5 @@
 import shortId from "shortid";
+import { produce } from "immer";
 
 export const initialValue = {
     mainPosts: [
@@ -100,95 +101,94 @@ const dummyComment = (data) => ({
         nickname: "이현철",
     },
 });
-
+//리듀서란 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(단, 불변성은 지키면서)
+//draft는 불변성 상관없이 바꾸면 immer가 알아서 불변성있게 만들어준다.
 const reducer = (state = initialValue, action) => {
-    switch (action.type) {
-        //게시글 추가
-        case ADD_POST_REQUEST:
-            return {
-                ...state,
-                addPostLoading: true,
-                addPostDone: false,
-                addPostError: null,
-            };
+    return produce(state, (draft) => {
+        switch (action.type) {
+            //게시글 추가
+            case ADD_POST_REQUEST:
+                draft.addPostLoading = true;
+                draft.addPostDone = false;
+                draft.addPostError = null;
+                break;
+            case ADD_POST_SUCCESS:
+                draft.addPostLoading = false;
+                draft.addPostDone = true;
+                draft.mainPosts.unshift(dummyPost(action.data));
+                //unshift란 배열의 맨 앞에다가 추가하는 함수
+                break;
+            case ADD_POST_FAILURE:
+                draft.addPostLoading = false;
+                draft.addPostError = action.error;
+                break;
 
-        case ADD_POST_SUCCESS:
-            return {
-                ...state,
-                mainPosts: [dummyPost(action.data), ...state.mainPosts],
-                addPostLoading: false,
-                addPostDone: true,
-            };
-        case ADD_POST_FAILURE:
-            return {
-                ...state,
-                addPostLoading: false,
-                addPostError: action.error,
-            };
+            //댓글 추가
+            case ADD_COMMENT_REQUEST:
+                draft.addCommentLoading = true;
+                draft.addCommentDone = false;
+                draft.addCommentError = null;
+                break;
 
-        //댓글 추가
-        case ADD_COMMENT_REQUEST:
-            return {
-                ...state,
-                addCommentLoading: true,
-                addCommentDone: false,
-                addCommentError: null,
-            };
+            case ADD_COMMENT_SUCCESS:
+                //immer버전 (너무 간단함)
+                const post = draft.mainPosts.find(
+                    (v) => v.id === action.data.postId
+                ); //해당 게시글 찾기
+                post.Comments.unshift(dummyComment(action.data.content));
+                draft.addCommentLoading = false;
+                draft.addCommentDone = true;
+                //댓글 넣어주기
+                break;
 
-        case ADD_COMMENT_SUCCESS:
-            const postIndex = state.mainPosts.findIndex(
-                (v) => v.id === action.data.postId
-            );
-            const post = { ...state.mainPosts[postIndex] };
+            //immer를 안 쓴 부분
+            // const postIndex = state.mainPosts.findIndex(
+            //     (v) => v.id === action.data.postId
+            // );
+            // const post = { ...state.mainPosts[postIndex] };
 
-            post.Comments = [
-                dummyComment(action.data.content),
-                ...post.Comments,
-            ]; //얕은 복사
+            // post.Comments = [
+            //     dummyComment(action.data.content),
+            //     ...post.Comments,
+            // ]; //얕은 복사
 
-            const mainPosts = [...state.mainPosts];
-            mainPosts[postIndex] = post; //댓글 추가하는 부분 너무어려움..
-            //불변성을 지키다 보니 가독성이 너무 안좋음
-            //
+            // const mainPosts = [...state.mainPosts];
+            // mainPosts[postIndex] = post; //댓글 추가하는 부분 너무어려움..
+            // //불변성을 지키다 보니 가독성이 너무 안좋음
 
-            return {
-                ...state,
-                mainPosts,
-                addCommentLoading: false,
-                addCommentDone: true,
-            };
-        case ADD_COMMENT_FAILURE:
-            return {
-                ...state,
-                addCommentLoading: false,
-                addCommentError: action.error,
-            };
+            // return {
+            //     ...state,
+            //     mainPosts,
+            //     addCommentLoading: false,
+            //     addCommentDone: true,
+            // };
+            case ADD_COMMENT_FAILURE:
+                draft.addCommentLoading = false;
+                draft.addCommentError = action.error;
+                break;
 
-        //게시글 삭제
-        case REMOVE_POST_REQUEST:
-            return {
-                ...state,
-                removePostLoading: true,
-                removePostDone: false,
-                removePostError: null,
-            };
+            //게시글 삭제
+            case REMOVE_POST_REQUEST:
+                draft.removePostDone = false;
+                draft.removePostLoading = true;
+                draft.removePostError = null;
+                break;
 
-        case REMOVE_POST_SUCCESS:
-            return {
-                ...state,
-                mainPosts: state.mainPosts.filter((v) => v.id !== action.data),
-                removePostLoading: false,
-                removePostDone: true,
-            };
-        case REMOVE_POST_FAILURE:
-            return {
-                ...state,
-                removePostLoading: false,
-                removePostError: action.error,
-            };
-        default:
-            return state;
-    }
+            case REMOVE_POST_SUCCESS:
+                draft.removePostLoading = false;
+                draft.removePostDone = true;
+                draft.mainPosts = draft.mainPosts.filter(
+                    (v) => v.id !== action.data
+                );
+                break;
+            case REMOVE_POST_FAILURE:
+                draft.removePostLoading = false;
+                draft.removePostError = action.error;
+                break;
+            default:
+                break;
+        }
+    });
 };
 
 export default reducer;
