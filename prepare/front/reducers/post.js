@@ -67,7 +67,7 @@ export const addComment = (data) => ({
 });
 
 const dummyPost = (data) => ({
-    id: shortId.generate(),
+    id: shortId.generate(), //더미데이터여도 계속 같은 값이 들어가면 안되니까 랜덤으로 생성.
     content: data,
     User: {
         id: 1,
@@ -125,13 +125,15 @@ const reducer = (state = initialValue, action) => {
                 (v) => v.id === action.data.postId
             );
             const post = { ...state.mainPosts[postIndex] };
+
             post.Comments = [
                 dummyComment(action.data.content),
                 ...post.Comments,
             ]; //얕은 복사
+
             const mainPosts = [...state.mainPosts];
             mainPosts[postIndex] = post; //댓글 추가하는 부분 너무어려움..
-            //이걸 편하게 하려면
+            //불변성을 지키다 보니 가독성이 너무 안좋음
 
             return {
                 ...state,
