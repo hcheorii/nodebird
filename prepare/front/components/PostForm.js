@@ -1,13 +1,15 @@
 import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useCallback, useRef, useEffect } from "react";
-import { addPost } from "../reducers/post";
+import { addPost, ADD_POST_REQUEST } from "../reducers/post";
 import useInput from "../hooks/useInput";
 
 const PostForm = () => {
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput("");
-    const { imagePaths, addPostDone } = useSelector((state) => state.post);
+    const { imagePaths, addPostDone, addPostloading } = useSelector(
+        (state) => state.post
+    );
 
     const imageInput = useRef();
     //ref는 실제DOM에 접근하기 위해서 사용
@@ -19,10 +21,11 @@ const PostForm = () => {
     }, [addPostDone]);
 
     const onSubmit = useCallback(() => {
-        dispatch(addPost(text));
+        dispatch({ type: ADD_POST_REQUEST, data: text });
         // setText(""); //여기서 이렇게 초기화해줄 경우에 서버쪽에서 응답으로 오류가 났을때 게시물이 잘 올라가지 않았음에도 초기화되어버림.
         //그래서 위에 useEffect부분을 따로 작성해줌.
-    }, []);
+        console.log(text);
+    }, [text]);
 
     const onClickImageUpload = useCallback(() => {
         imageInput.current.click();
