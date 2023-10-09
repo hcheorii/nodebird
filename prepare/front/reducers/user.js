@@ -52,7 +52,7 @@ const dummyUser = (data) => ({
     ...data,
     nickname: "hyeon cheol lee",
     id: 1,
-    Posts: data.Posts,
+    Posts: [{ id: 1 }],
     Followings: [
         { nickname: "미노이" },
         { nickname: "미노이2" },
@@ -171,6 +171,14 @@ export default (state = initialValue, action) => {
                 me: {
                     ...state.me,
                     Posts: [{ id: action.data }, ...state.me.Posts],
+                },
+            };
+        case REMOVE_POST_OF_ME:
+            return {
+                ...state,
+                me: {
+                    ...state.me,
+                    Posts: state.me.Posts.filter((v) => v.id !== action.data),
                 },
             };
         default:
