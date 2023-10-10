@@ -42,7 +42,7 @@ const Home = () => {
         return () => {
             window.removeEventListener("scroll", onScroll);
         };
-    }, [hasMorePost]);
+    }, [hasMorePost, loadPostsLoading]);
 
     return (
         <AppLayout>
