@@ -10,6 +10,12 @@ import {
     SIGN_UP_REQUEST,
     SIGN_UP_SUCCESS,
     SIGN_UP_FAILURE,
+    FOLLOW_FAILURE,
+    FOLLOW_REQUEST,
+    FOLLOW_SUCCESS,
+    UNFOLLOW_FAILURE,
+    UNFOLLOW_REQUEST,
+    UNFOLLOW_SUCCESS,
 } from "../reducers/user";
 
 // 로그인
@@ -76,6 +82,46 @@ function* signUp(action) {
     }
 }
 
+//팔로우
+function followAPI() {
+    return axios("/api/signup");
+}
+function* watchFollow() {
+    yield takeLatest(FOLLOW_REQUEST, follow);
+}
+function* follow(action) {
+    try {
+        yield delay(1000);
+        // const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({ type: FOLLOW_SUCCESS, data: action.data });
+    } catch (err) {
+        put({ type: FOLLOW_FAILURE, error: err.response.data });
+    }
+}
+
+//언팔로우
+function unfollowAPI() {
+    return axios("/api/signup");
+}
+function* watchUnollow() {
+    yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
+function* unfollow(action) {
+    try {
+        yield delay(1000);
+        // const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({ type: UNFOLLOW_SUCCESS, data: action.data });
+    } catch (err) {
+        put({ type: UNFOLLOW_FAILURE, error: err.response.data });
+    }
+}
+
 export default function* userSaga() {
-    yield all([fork(watchLogIn), fork(watchLogOut), fork(watchSignUp)]);
+    yield all([
+        fork(watchLogIn),
+        fork(watchLogOut),
+        fork(watchSignUp),
+        fork(watchFollow),
+        fork(watchUnollow),
+    ]);
 }
