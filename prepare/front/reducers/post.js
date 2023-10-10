@@ -3,50 +3,14 @@ import { produce } from "immer";
 import faker from "faker";
 
 export const initialValue = {
-    mainPosts: [
-        {
-            id: 1,
-            User: {
-                id: 1,
-                nickname: "이현철",
-            },
-            content: "첫 번째 게시글 #해시태그 #익스프레스",
-            Images: [
-                {
-                    id: shortId.generate(),
-                    src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
-                },
-                {
-                    id: shortId.generate(),
-                    src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
-                },
-                {
-                    id: shortId.generate(),
-                    src: "https://cdn.newswatch.kr/news/photo/202210/60598_55659_5929.png",
-                },
-            ],
-            Comments: [
-                {
-                    id: shortId.generate(),
-                    User: {
-                        id: shortId.generate(),
-                        nickname: "nero",
-                    },
-                    content: "우와 개정판이 나왔군요~",
-                },
-                {
-                    id: shortId.generate(),
-                    User: {
-                        id: shortId.generate(),
-                        nickname: "hero",
-                    },
-                    content: "얼른 사고싶어요~",
-                },
-            ],
-        },
-    ],
+    mainPosts: [],
     //이미지업로드 할떄 이미지경로들이 여기 들어간다.
     imagePaths: [],
+
+    hasMorePost: true, //true면 가져올 시도를 해라.
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
     //게시글 추가가 완료되었을때 TRue
     addPostLoading: false,
     addPostDone: false,
@@ -62,9 +26,8 @@ export const initialValue = {
 };
 //가짜 데이터
 
-//concat은 두개 이상의 배열을 합칠 때 사용
-initialValue.mainPosts = initialValue.mainPosts.concat(
-    Array(20)
+export const generateDummyPost = (number) =>
+    Array(number)
         .fill()
         .map(() => ({
             id: shortId.generate(),
@@ -75,7 +38,7 @@ initialValue.mainPosts = initialValue.mainPosts.concat(
             content: faker.lorem.paragraph(), //아무 문장,
             Images: [
                 {
-                    src: faker.image.imageUrl(),
+                    src: faker.image.image(),
                 },
             ],
             Comments: [
@@ -87,8 +50,13 @@ initialValue.mainPosts = initialValue.mainPosts.concat(
                     content: faker.lorem.sentence(),
                 },
             ],
-        }))
-);
+        }));
+//concat은 두개 이상의 배열을 합칠 때 사용
+
+export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
+export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
+export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
+
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
 export const ADD_POST_FAILURE = "ADD_POST_FAILURE";
@@ -149,6 +117,25 @@ const reducer = (state = initialValue, action) => {
             case ADD_POST_FAILURE:
                 draft.addPostLoading = false;
                 draft.addPostError = action.error;
+                break;
+
+            //게시글 불러오기
+            case LOAD_POSTS_REQUEST:
+                draft.loadPostsLoading = true;
+                draft.loadPostsDone = false;
+                draft.loadPostsError = null;
+                break;
+            case LOAD_POSTS_SUCCESS:
+                draft.loadPostsLoading = false;
+                draft.loadPostsDone = true;
+                draft.mainPosts = action.data.concat(draft.mainPosts);
+                //action.data에는 더미데이터들이 들어있고 draft.mainPosts는 원래 데이터
+                draft.hasMorePost = draft.mainPosts.length < 50;
+                //50개보다 적으면 has
+                break;
+            case LOAD_POSTS_FAILURE:
+                draft.loadPostsLoading = false;
+                draft.loadPostsError = action.error;
                 break;
 
             //댓글 추가

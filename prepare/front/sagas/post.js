@@ -1,6 +1,6 @@
-import { all, delay, fork, put } from "redux-saga/effects";
+import { all, delay, fork, put, throttle } from "redux-saga/effects";
 import { takeLatest } from "redux-saga/effects";
-import shortId from "shortid";
+import shortId, { generate } from "shortid";
 import {
     ADD_POST_FAILURE,
     ADD_POST_REQUEST,
@@ -11,8 +11,11 @@ import {
     REMOVE_POST_FAILURE,
     REMOVE_POST_SUCCESS,
     REMOVE_POST_REQUEST,
+    LOAD_POSTS_REQUEST,
+    LOAD_POSTS_SUCCESS,
+    LOAD_POSTS_FAILURE,
 } from "../reducers/post";
-
+import { generateDummyPost } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 
 //게시글 작성
@@ -80,6 +83,28 @@ function* removePost(action) {
     }
 }
 
+//게시글 불러오기
+
+function* watchLoadPosts() {
+    yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+}
+
+function loadPostAPI() {
+    return axios.post("/api/post");
+}
+function* loadPosts(action) {
+    try {
+        yield delay(1000);
+        // const result = yield call(addPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({
+            type: LOAD_POSTS_SUCCESS,
+            data: generateDummyPost(10),
+        });
+    } catch (err) {
+        put({ type: LOAD_POSTS_FAILURE, data: err.response.data });
+    }
+}
+
 function* watchRemovePost() {
     yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
@@ -87,6 +112,7 @@ function* watchRemovePost() {
 export default function* postSaga() {
     yield all([
         fork(watchAddPost),
+        fork(watchLoadPosts),
         fork(watchAddComment),
         fork(watchRemovePost),
     ]);
