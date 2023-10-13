@@ -3,6 +3,8 @@ import { Button } from "antd";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from "../reducers/user";
+
+
 const FollowButton = ({ post }) => {
     const { me, followLoading, unFollowLoading } = useSelector(
         (state) => state.user
@@ -12,13 +14,13 @@ const FollowButton = ({ post }) => {
     const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
     //이미 팔로우를 하고 있는지.
     const onClickButton = useCallback(() => {
-        if (isFollowing) {
+        if (isFollowing) { //이미 팔로잉 중인 사람
             dispatch({
                 type: UNFOLLOW_REQUEST,
                 data: post.User.id, //이 게시물을 쓴 사람의 정보
             });
-        } else {
-            dispatch({
+        } else { //팔로우 안하고있는 사람
+            dispatch({ 
                 type: FOLLOW_REQUEST,
                 data: post.User.id, //이 게시물을 쓴 사람의 정보
             });

@@ -17,18 +17,20 @@ import { REMOVE_POST_REQUEST } from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 const PostCard = ({ post }) => {
-    const [liked, setLiked] = useState(false);
-    const [commentFormOpened, setCommentFormOpened] = useState(false);
-
     const dispatch = useDispatch();
+
+    //pages/index.js에서 mainPosts에서 하나씩 뜯어서 보내줌
+    const [liked, setLiked] = useState(false); //좋아요
+    const [commentFormOpened, setCommentFormOpened] = useState(false);
+    //댓글창 열지 말지
 
     const onToggleLike = useCallback(() => {
         setLiked((prev) => !prev);
-    }, []);
+    }, []); //좋아요를 한번 더 누르면 좋아요 취소
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
-    }, []);
+    }, []); //폼 버튼 한번 더 누르면 폼 닫기
 
     const onRemovePost = useCallback(() => {
         dispatch({
@@ -44,23 +46,26 @@ const PostCard = ({ post }) => {
         <div style={{ marginBottom: 20 }}>
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
+                //이미지가 존재한다면 PostImages를 출력
                 actions={[
+                    //카드 아래에 존재하는 것들
                     <RetweetOutlined key="retweet" />,
                     liked ? (
                         <HeartTwoTone
-                            twoToneColor="ev2f96"
+                            twoToneColor="red"
                             onClick={onToggleLike}
                         />
                     ) : (
                         <HeartOutlined key="heart" onClick={onToggleLike} />
                     ),
                     <MessageOutlined onClick={onToggleComment} key="comment" />,
-                    <Popover
+                    <Popover //더보기 같은 역할
                         key="more"
                         content={
                             <Button.Group>
                                 {id && post.User.id === id ? (
                                     <>
+                                        {/* 내가 쓴 글이면 수정, 삭제 */}
                                         <Button>수정</Button>
                                         <Button
                                             type="danger"
@@ -71,6 +76,7 @@ const PostCard = ({ post }) => {
                                         </Button>
                                     </>
                                 ) : (
+                                    // 내가 쓴 글이 아니라면
                                     <Button>신고</Button>
                                 )}
                             </Button.Group>
@@ -81,13 +87,14 @@ const PostCard = ({ post }) => {
                 ]}
                 extra={id && <FollowButton post={post} />}
             >
-                <Card.Meta
+                <Card.Meta //프로필과 내용 등
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
                     title={post.User.nickname}
                     description={<PostCardContent postData={post.content} />}
                 />
             </Card>
             {commentFormOpened && (
+                //commentFormOpened가 true이면 열어라
                 <div>
                     {/* 어떤 게시글에 댓글을 남기는지.. */}
                     <CommentForm post={post} />

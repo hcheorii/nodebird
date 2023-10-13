@@ -6,7 +6,8 @@ export const initialValue = {
     //이미지업로드 할떄 이미지경로들이 여기 들어간다.
     imagePaths: [],
 
-    hasMorePost: true, //true면 가져올 시도를 해라.
+    hasMorePost: true, //true면 가져올 시도를 해라. (스크롤 했을 때)
+
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
@@ -50,7 +51,6 @@ export const generateDummyPost = (number) =>
                 },
             ],
         }));
-//concat은 두개 이상의 배열을 합칠 때 사용
 
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
@@ -128,9 +128,10 @@ const reducer = (state = initialValue, action) => {
                 draft.loadPostsLoading = false;
                 draft.loadPostsDone = true;
                 draft.mainPosts = action.data.concat(draft.mainPosts);
+                //concat은 두개 이상의 배열을 합칠 때 사용
                 //action.data에는 더미데이터들이 들어있고 draft.mainPosts는 원래 데이터
                 draft.hasMorePost = draft.mainPosts.length < 50;
-                //50개보다 적으면 has
+                //50개보다 적으면 불러와야함
                 break;
             case LOAD_POSTS_FAILURE:
                 draft.loadPostsLoading = false;

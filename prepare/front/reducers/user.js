@@ -137,6 +137,8 @@ export default (state = initialValue, action) => {
                 draft.logInLoading = false;
                 draft.logInError = action.error;
                 break;
+
+                
             //로그아웃
             case LOG_OUT_REQUEST:
                 draft.logOutLoading = true; //로그아웃 시도중
@@ -152,33 +154,35 @@ export default (state = initialValue, action) => {
                 draft.logOutLoading = false; //로그아웃 시도중
                 draft.logOutError = action.error;
                 break;
+
             //회원가입
             case SIGN_UP_REQUEST:
-                draft.signUpLoading = true; //로그아웃 시도중
+                draft.signUpLoading = true; //로그인 시도중
                 draft.signUpDone = false;
                 draft.signUpError = null;
                 break;
             case SIGN_UP_SUCCESS:
-                draft.signUpLoading = false; //로그아웃 시도중
+                draft.signUpLoading = false; //로그인 시도중
                 draft.signUpDone = true;
                 break;
             case SIGN_UP_FAILURE:
-                draft.signUpLoading = false; //로그아웃 시도중
+                draft.signUpLoading = false; //로그인 시도중
                 draft.signUpError = action.error;
                 break;
 
+
             //닉네임 변경
             case CHANGE_NICKNAME_REQUEST:
-                draft.changeNicknameLoading = true; //로그아웃 시도중
+                draft.changeNicknameLoading = true; 
                 draft.changeNicknameDone = false;
                 draft.changeNicknameError = null;
                 break;
             case CHANGE_NICKNAME_SUCCESS:
-                draft.changeNicknameLoading = false; //로그아웃 시도중
+                draft.changeNicknameLoading = false;
                 draft.changeNicknameDone = true;
                 break;
             case CHANGE_NICKNAME_FAILURE:
-                draft.changeNicknameLoading = false; //로그아웃 시도중
+                draft.changeNicknameLoading = false;
                 draft.changeNicknameError = action.error;
                 break;
 

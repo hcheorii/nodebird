@@ -1,6 +1,6 @@
 import { all, delay, fork, put, throttle } from "redux-saga/effects";
 import { takeLatest } from "redux-saga/effects";
-import shortId, { generate } from "shortid";
+import shortId from "shortid";
 import {
     ADD_POST_FAILURE,
     ADD_POST_REQUEST,
@@ -36,12 +36,14 @@ function* addPost(action) {
             },
         });
         yield put({ type: ADD_POST_TO_ME, data: id });
+        //내가 썼는지 확인하기 위함
     } catch (err) {
         put({ type: ADD_POST_FAILURE, data: err.response.data });
     }
 }
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
+    //ADD_POST_REQUEST 가 요청되면, addPost실행
 }
 
 //댓글작성
@@ -68,6 +70,7 @@ function* watchAddComment() {
 function removePostAPI() {
     return axios.post("/api/post");
 }
+
 function* removePost(action) {
     try {
         yield delay(1000);
@@ -81,16 +84,22 @@ function* removePost(action) {
         put({ type: REMOVE_POST_FAILURE, data: err.response.data });
     }
 }
+function* watchRemovePost() {
+    yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
 
 //게시글 불러오기
 
 function* watchLoadPosts() {
     yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+    //5초안에 들어온 같은 요청은 무시해버림 (throttle)
+    
 }
 
 function loadPostAPI() {
     return axios.post("/api/post");
 }
+
 function* loadPosts(action) {
     try {
         yield delay(1000);
@@ -98,14 +107,11 @@ function* loadPosts(action) {
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: generateDummyPost(10),
+            //스크롤 넘어갈때, 10개씩 게속 불러온다.
         });
     } catch (err) {
         put({ type: LOAD_POSTS_FAILURE, data: err.response.data });
     }
-}
-
-function* watchRemovePost() {
-    yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
 export default function* postSaga() {

@@ -25,7 +25,7 @@ const Home = () => {
                 document.documentElement.scrollHeight
             );
             if (
-                //만약 스크롤을 끝까지 다 내렸으면
+                //만약 스크롤을 끝에서 -300까지 다 내렸으면
                 window.scrollY + document.documentElement.clientHeight >
                 document.documentElement.scrollHeight - 300
             ) {
@@ -49,6 +49,7 @@ const Home = () => {
             {me && <PostForm />}
             {mainPosts.map((post) => (
                 <PostCard key={post.id} post={post} />
+                //PostCard에 포스트 데이터 보내주기
             ))}
         </AppLayout>
     );

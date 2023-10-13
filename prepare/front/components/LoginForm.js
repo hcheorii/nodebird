@@ -12,6 +12,7 @@ const ButtonWrapper = styled.div`
 
 const FormWrapper = styled(Form)`
     padding: 10px;
+    margin-left: 5px;
 `;
 
 const LoginForm = () => {
@@ -23,7 +24,6 @@ const LoginForm = () => {
     //reducer/user.js에서 받아옴
 
     const onSubmitForm = useCallback(() => {
-        console.log(email, password);
         dispatch({ type: LOG_IN_REQUEST, data: { email, password } });
     }, [email, password]);
 
