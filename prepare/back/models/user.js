@@ -1,6 +1,6 @@
 //model은 mysql의 테이블과 같은 개념이다.
 
-mudule.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define(
         //여기서 User는 모델이름 => 자동으로 소문자화되고 복수형이 된다. ex)users
 
@@ -32,16 +32,16 @@ mudule.exports = (sequelize, DataTypes) => {
     User.associate = (db) => {
         db.User.hasMany(db.Post); //한 사람이 포스트를 여러개 가질 수 있음
         db.User.hasMany(db.Comment); //한 사람이 댓글 여러개 가질 수 있음
-        db.User.belongToMany(db.Post, { though: "Like", as: "Liked" });
+        db.User.belongsToMany(db.Post, { through: "Like", as: "Liked" });
         //게시글 좋아요와 유저는 다대다 관계, 중간 테이블으 이름은 Like
 
-        db.User.belongToMany(db.User, {
-            though: "Follow",
+        db.User.belongsToMany(db.User, {
+            through: "Follow",
             as: "Followers",
             foreignKey: "FollowingId",
         });
-        db.User.belongToMany(db.User, {
-            though: "Follow",
+        db.User.belongsToMany(db.User, {
+            through: "Follow",
             as: "Followings",
             foreignKey: "Followerid",
         }); //내가 팔로잉하는 사람을 찾으려면 나를 먼저 찾아야 한다.

@@ -1,6 +1,6 @@
 //model은 mysql의 테이블과 같은 개념이다.
 
-mudule.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
     const Post = sequelize.define(
         //여기서 Post는 모델이름 => 자동으로 소문자화되고 복수형이 된다. ex)usersㅅ
 
@@ -18,8 +18,8 @@ mudule.exports = (sequelize, DataTypes) => {
         db.Post.belongsTo(db.User); //어떤 게시물은 어떤 유저에 속해있다. (작성자)
         db.Post.hasMany(db.Comment); //한 게시물에 댓글 여러개
         db.Post.hasMany(db.Image); //한 게시물에 이미지 여러개
-        db.Post.belongToMany(db.Hashtag); //해시태그와는 다대다 관게
-        db.Post.belongToMany(db.User, { though: "Like", as: "Likers" });
+        db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" }); //해시태그와는 다대다 관게
+        db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" });
         //게시글 좋아요와 유저는 다대다 관계, 중간 테이블의 이름은 Like
         db.Post.belongsTo(db.Post, { as: "Retweet" }); //리트윗관계(1대다)
     };

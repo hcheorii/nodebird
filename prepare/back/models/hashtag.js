@@ -1,6 +1,6 @@
 //model은 mysql의 테이블과 같은 개념이다.
 
-mudule.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
     const Hashtag = sequelize.define(
         //여기서 Hashtag는 모델이름 => 자동으로 소문자화되고 복수형이 된다. ex)users
 
@@ -15,7 +15,7 @@ mudule.exports = (sequelize, DataTypes) => {
         }
     );
     Hashtag.associate = (db) => {
-        db.Hashtag.belongToMany(db.Post); //포스트와는 다대다 관게
+        db.Hashtag.belongsToMany(db.Post, { through: "PostHashtag" }); //포스트와는 다대다 관게
     };
 
     return Hashtag;
