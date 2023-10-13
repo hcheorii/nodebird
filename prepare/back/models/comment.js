@@ -14,7 +14,9 @@ mudule.exports = (sequelize, DataTypes) => {
             collate: "utf8_general_ci", //한글 저장
         }
     );
-    Comment.associate = (db) => {};
+    Comment.associate = (db) => {
+        db.Comment.belongsTo(db.User); //어떤 게시물은 어떤 유저에 속해있다.
+    };
 
     return Comment;
 };

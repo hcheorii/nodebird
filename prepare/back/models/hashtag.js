@@ -14,7 +14,9 @@ mudule.exports = (sequelize, DataTypes) => {
             collate: "utf8_general_ci", //한글 저장
         }
     );
-    Hashtag.associate = (db) => {};
+    Hashtag.associate = (db) => {
+        db.Hashtag.belongToMany(db.Post); //포스트와는 다대다 관게
+    };
 
     return Hashtag;
 };

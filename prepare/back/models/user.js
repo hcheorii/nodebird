@@ -29,7 +29,23 @@ mudule.exports = (sequelize, DataTypes) => {
             collate: "utf8_general_ci", //한글 저장
         }
     );
-    User.associate = (db) => {};
+    User.associate = (db) => {
+        db.User.hasMany(db.Post); //한 사람이 포스트를 여러개 가질 수 있음
+        db.User.hasMany(db.Comment); //한 사람이 댓글 여러개 가질 수 있음
+        db.User.belongToMany(db.Post, { though: "Like", as: "Liked" });
+        //게시글 좋아요와 유저는 다대다 관계, 중간 테이블으 이름은 Like
+
+        db.User.belongToMany(db.User, {
+            though: "Follow",
+            as: "Followers",
+            foreignKey: "FollowingId",
+        });
+        db.User.belongToMany(db.User, {
+            though: "Follow",
+            as: "Followings",
+            foreignKey: "Followerid",
+        }); //내가 팔로잉하는 사람을 찾으려면 나를 먼저 찾아야 한다.
+    };
 
     return User;
 };

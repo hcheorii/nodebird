@@ -14,7 +14,15 @@ mudule.exports = (sequelize, DataTypes) => {
             collate: "utf8_general_ci", //한글 저장
         }
     );
-    Post.associate = (db) => {};
+    Post.associate = (db) => {
+        db.Post.belongsTo(db.User); //어떤 게시물은 어떤 유저에 속해있다. (작성자)
+        db.Post.hasMany(db.Comment); //한 게시물에 댓글 여러개
+        db.Post.hasMany(db.Image); //한 게시물에 이미지 여러개
+        db.Post.belongToMany(db.Hashtag); //해시태그와는 다대다 관게
+        db.Post.belongToMany(db.User, { though: "Like", as: "Likers" });
+        //게시글 좋아요와 유저는 다대다 관계, 중간 테이블의 이름은 Like
+        db.Post.belongsTo(db.Post, { as: "Retweet" }); //리트윗관계(1대다)
+    };
 
     return Post;
 };
