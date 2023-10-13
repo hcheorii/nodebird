@@ -7,15 +7,16 @@ import { useSelector } from "react-redux";
 import Router from "next/router";
 
 const Profile = () => {
-    const { me } = useSelector((state) => state.user);
+    const { me } = useSelector((state) => state.user); //로그인한 내 정보 가져오기
     useEffect(() => {
         if (!(me && me.id)) {
             Router.push("/");
         }
-    }, [me && me.id]);
+    }, [me && me.id]); //로그인하지 않고 프로필 눌렀을때 홈으로 이동
     if (!me) {
         return null;
     }
+
     return (
         <>
             <Head>

@@ -1,7 +1,6 @@
 import shortId from "shortid";
 import { produce } from "immer";
 import faker from "faker";
-
 export const initialValue = {
     mainPosts: [],
     //이미지업로드 할떄 이미지경로들이 여기 들어간다.
@@ -38,7 +37,7 @@ export const generateDummyPost = (number) =>
             content: faker.lorem.paragraph(), //아무 문장,
             Images: [
                 {
-                    src: faker.image.image(),
+                    src: "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
                 },
             ],
             Comments: [

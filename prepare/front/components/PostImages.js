@@ -5,12 +5,10 @@ import ImagesZoom from "./ImagesZoom";
 const PostImages = ({ images }) => {
     const [showImgesZoom, setShowImagesZoom] = useState(false);
 
-    
     const onZoom = useCallback(() => {
         setShowImagesZoom(true);
     }, []);
 
-    
     const onClose = useCallback(() => {
         setShowImagesZoom(false);
     }, []);
@@ -44,7 +42,7 @@ const PostImages = ({ images }) => {
                     role="presentaion"
                     src={images[1].src}
                     alt={images[1].src}
-                    onClick={onZoom}  
+                    onClick={onZoom}
                     style={{ width: "50%", display: "inline-block" }}
                 />
                 {showImgesZoom && (
@@ -58,7 +56,7 @@ const PostImages = ({ images }) => {
             <div>
                 <img
                     role="presentation"
-                    width="50%"
+                    width="20px"
                     src={images[0].src}
                     alt={images[0].src}
                     onClick={onZoom}

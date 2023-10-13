@@ -12,6 +12,8 @@ const SearchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }) => {
+    //여기서 children은 AppLayout태그를 사용하는 곳에서
+    //열린태그와 닫힌 태그 사이에 있는 내용이 children에 들어간다.
     const { me } = useSelector((state) => state.user);
 
     return (
@@ -22,7 +24,6 @@ const AppLayout = ({ children }) => {
                         <a>노드버드</a>
                     </Link>
                 </Menu.Item>
-
                 <Menu.Item>
                     <Link href="/profile">
                         <a>프로필</a>

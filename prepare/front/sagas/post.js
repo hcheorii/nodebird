@@ -40,7 +40,6 @@ function* addPost(action) {
         put({ type: ADD_POST_FAILURE, data: err.response.data });
     }
 }
-
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
 }
