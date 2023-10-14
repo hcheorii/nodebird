@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             charset: "utf8mb4", //이모티콘을 사용하려면 mb4를 추가해줘야한다.
-
-            collate: "utf8_general_ci", //한글 저장
+            collate: "utf8mb4_general_ci", //한글 저장
         }
     );
     Hashtag.associate = (db) => {
