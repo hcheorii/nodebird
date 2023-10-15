@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next -p 3070"
+        "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next -p 3060"
     },
     "author": "HyeonCheol",
     "license": "ISC",

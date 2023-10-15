@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, delay, put } from "redux-saga/effects";
+import { all, fork, takeLatest, delay, put, call } from "redux-saga/effects";
 
 import {
     LOG_IN_SUCCESS,
@@ -17,6 +17,7 @@ import {
     UNFOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
 } from "../reducers/user";
+import axios from "axios";
 
 // 로그인
 function logInAPI(data) {
@@ -66,19 +67,20 @@ function* logOut() {
 
 //회원가입
 
-function signUpAPI() {
-    return axios("/api/signup");
+function signUpAPI(data) {
+    return axios.post("http://localhost:3065/user", data); //백엔드 서버 주소
 }
 function* watchSignUp() {
     yield takeLatest(SIGN_UP_REQUEST, signUp);
 }
 function* signUp(action) {
     try {
-        yield delay(1000);
-        // const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        console.log(result);
         yield put({ type: SIGN_UP_SUCCESS, data: action.data });
     } catch (err) {
-        put({ type: SIGN_UP_FAILURE, error: err.response.data });
+        yield put({ type: SIGN_UP_FAILURE, error: err.response.data });
+        console.log(err);
     }
 }
 

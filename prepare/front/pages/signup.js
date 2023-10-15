@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import AppLayout from "../components/AppLayout";
 import Head from "next/head";
 import { Form, Input, Checkbox, Button } from "antd";
@@ -6,15 +6,30 @@ import useInput from "../hooks/useInput";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_UP_REQUEST } from "../reducers/user";
+import Router from "next/router";
 
 const Signup = () => {
+    const dispatch = useDispatch();
+
     const ErrorMessage = styled.div`
         color: red;
     `;
 
-    const { signUpLoading } = useSelector((state) => state.user);
+    const { signUpLoading, me, signUpDone, signUpError } = useSelector(
+        (state) => state.user
+    );
 
-    const dispatch = useDispatch();
+    useEffect(() => {
+        if (signUpDone) {
+            Router.replace("/");
+        }
+    }, [signUpDone]);
+
+    useEffect(() => {
+        if (signUpError) {
+            alert(signUpError);
+        }
+    }, [signUpError]);
 
     const [email, onChangeEmail] = useInput(""); //이메일
     const [password, onChangePassword] = useInput(""); //비밀번호

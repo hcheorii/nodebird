@@ -138,7 +138,6 @@ export default (state = initialValue, action) => {
                 draft.logInError = action.error;
                 break;
 
-                
             //로그아웃
             case LOG_OUT_REQUEST:
                 draft.logOutLoading = true; //로그아웃 시도중
@@ -170,10 +169,9 @@ export default (state = initialValue, action) => {
                 draft.signUpError = action.error;
                 break;
 
-
             //닉네임 변경
             case CHANGE_NICKNAME_REQUEST:
-                draft.changeNicknameLoading = true; 
+                draft.changeNicknameLoading = true;
                 draft.changeNicknameDone = false;
                 draft.changeNicknameError = null;
                 break;
