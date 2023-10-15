@@ -22,17 +22,17 @@ import axios from "axios";
 // 로그인
 function logInAPI(data) {
     //실제로 서버에 요청을 보내는 부분
-    return axios.post("/api/login", data);
+    return axios.post("/user/login", data);
 }
 
 function* logIn(action) {
     //LOG_IN_REQUEST액션이 디스패치되었을 때 호출 되는 제네레이터 함수.
     try {
-        yield delay(1000);
-        // const result = yield call(logInAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
-        yield put({ type: LOG_IN_SUCCESS, data: action.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
+        const result = yield call(logInAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        console.log(result);
+        yield put({ type: LOG_IN_SUCCESS, data: result.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
     } catch (err) {
-        put({ type: LOG_IN_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
+        yield put({ type: LOG_IN_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
     }
 }
 function* watchLogIn() {
@@ -52,7 +52,7 @@ function* watchLogOut() {
 }
 
 function logOutAPI() {
-    return axios.post("/api/logout");
+    return axios.post("/user/logout");
 }
 
 function* logOut() {
@@ -68,7 +68,7 @@ function* logOut() {
 //회원가입
 
 function signUpAPI(data) {
-    return axios.post("http://localhost:3065/user", data); //백엔드 서버 주소
+    return axios.post("/user", data); //백엔드 서버 주소
 }
 function* watchSignUp() {
     yield takeLatest(SIGN_UP_REQUEST, signUp);

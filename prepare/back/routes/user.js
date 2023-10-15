@@ -2,7 +2,30 @@ const express = require("express");
 const { User } = require("../models");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
+router.post("/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) {
+            console.error(err);
+            return next(err);
+        }
+        if (info) {
+            //client에러
+            return res.status(401).send(info.reason); //허가되지 않음.
+        }
+
+        return req.login(user, async (loginErr) => {
+            if (loginErr) {
+                console.error(loginErr);
+                return next(loginErr);
+            }
+            return res.status(200).json(user);
+        });
+    })(req, res, next);
+});
+//passport/local에 done에서 넘겨주는 것들을 ERR, user, info에 받아온다.
+//전략 실행
 router.post("/", async (req, res, next) => {
     try {
         const exUser = await User.findOne({

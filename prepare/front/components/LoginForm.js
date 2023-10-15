@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
-import useInput from "../hooks/useInput";
 import { useDispatch, useSelector } from "react-redux";
-import { LOG_IN_REQUEST } from "../reducers/user";
+
+import useInput from "../hooks/useInput";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -12,19 +13,23 @@ const ButtonWrapper = styled.div`
 
 const FormWrapper = styled(Form)`
     padding: 10px;
-    margin-left: 5px;
 `;
 
 const LoginForm = () => {
     const dispatch = useDispatch();
+    const { logInLoading, logInError } = useSelector((state) => state.user);
     const [email, onChangeEmail] = useInput("");
     const [password, onChangePassword] = useInput("");
 
-    const { logInLoading } = useSelector((state) => state.user);
-    //reducer/user.js에서 받아옴
+    useEffect(() => {
+        if (logInError) {
+            alert(logInError);
+        }
+    }, [logInError]);
 
     const onSubmitForm = useCallback(() => {
-        dispatch({ type: LOG_IN_REQUEST, data: { email, password } });
+        console.log(email, password);
+        dispatch(loginRequestAction({ email, password }));
     }, [email, password]);
 
     return (
@@ -61,7 +66,6 @@ const LoginForm = () => {
                     </a>
                 </Link>
             </ButtonWrapper>
-            <div></div>
         </FormWrapper>
     );
 };

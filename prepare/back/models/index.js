@@ -12,10 +12,10 @@ const sequelize = new Sequelize( //sequelize는 노드와 mysql을 연결시켜�
 );
 
 db.Comment = require("./comment")(sequelize, Sequelize);
-db.Post = require("./post")(sequelize, Sequelize);
-db.Image = require("./image")(sequelize, Sequelize);
 db.Hashtag = require("./hashtag")(sequelize, Sequelize);
-db.User = require("./user")(sequelize, Sequelize); //만들어둔 모델 불러오기
+db.Image = require("./image")(sequelize, Sequelize);
+db.Post = require("./post")(sequelize, Sequelize);
+db.User = require("./user")(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
     //각각의 js파일에 보면 associate있는 부분을 실행해준다.

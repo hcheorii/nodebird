@@ -131,7 +131,7 @@ export default (state = initialValue, action) => {
             case LOG_IN_SUCCESS:
                 draft.logInLoading = false;
                 draft.logInDone = true;
-                draft.me = dummyUser(action.data); //더미데이터
+                draft.me = action.data; //더미데이터
                 break;
             case LOG_IN_FAILURE:
                 draft.logInLoading = false;
