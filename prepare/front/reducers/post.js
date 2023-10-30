@@ -77,29 +77,10 @@ export const addComment = (data) => ({
     data,
 });
 
-const dummyPost = (data) => ({
-    id: data.id,
-    content: data.content,
-    User: {
-        id: 1,
-        nickname: "이현철",
-    },
-    Images: [],
-    Comments: [],
-});
-
-const dummyComment = (data) => ({
-    id: shortId.generate(),
-    content: data,
-    User: {
-        id: 1,
-        nickname: "이현철",
-    },
-});
 //리듀서란 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(단, 불변성은 지키면서)
 //draft는 불변성 상관없이 바꾸면 immer가 알아서 불변성있게 만들어준다.
-const reducer = (state = initialValue, action) => {
-    return produce(state, (draft) => {
+const reducer = (state = initialValue, action) =>
+    produce(state, (draft) => {
         switch (action.type) {
             //게시글 추가
             case ADD_POST_REQUEST:
@@ -110,7 +91,8 @@ const reducer = (state = initialValue, action) => {
             case ADD_POST_SUCCESS:
                 draft.addPostLoading = false;
                 draft.addPostDone = true;
-                draft.mainPosts.unshift(dummyPost(action.data));
+                draft.mainPosts.unshift(action.data);
+                draft.imagePaths = [];
                 //unshift란 배열의 맨 앞에다가 추가하는 함수
                 break;
             case ADD_POST_FAILURE:
@@ -204,6 +186,5 @@ const reducer = (state = initialValue, action) => {
                 break;
         }
     });
-};
 
 export default reducer;

@@ -13,17 +13,12 @@ const Home = () => {
     );
     useEffect(() => {
         dispatch({
-            type: LOAD_POSTS_REQUEST,
+            type: LOAD_POSTS_REQUEST, //게시물 불러오기
         });
     }, []);
 
     useEffect(() => {
         function onScroll() {
-            console.log(
-                window.scrollY,
-                document.documentElement.clientHeight,
-                document.documentElement.scrollHeight
-            );
             if (
                 //만약 스크롤을 끝에서 -300까지 다 내렸으면
                 window.scrollY + document.documentElement.clientHeight >
@@ -38,7 +33,7 @@ const Home = () => {
                 }
             }
         }
-        window.addEventListener("scroll", onScroll);
+        window.addEventListener("scroll", onScroll); //스크롤 할때마다 발생하는 이벤트
         return () => {
             window.removeEventListener("scroll", onScroll);
         };

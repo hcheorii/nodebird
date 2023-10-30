@@ -1,8 +1,9 @@
 const express = require("express");
-const { User } = require("../models");
+const { User, Post } = require("../models");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const db = require("../models");
 
 router.post("/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
@@ -20,6 +21,25 @@ router.post("/login", (req, res, next) => {
                 console.error(loginErr);
                 return next(loginErr);
             }
+            const fullUserWithoutPassword = await User.findOne({
+                where: { id: user.id }, //모든 정보들을 다 넣은 유저l
+                attribute: {
+                    exclude: ["password"], //비밀번호는 가져오지마라
+                },
+                include: [
+                    {
+                        model: Post,
+                    },
+                    {
+                        model: User,
+                        as: "Followings",
+                    },
+                    {
+                        model: User,
+                        as: "Followers",
+                    }, //로그인 오류 해결
+                ],
+            });
             return res.status(200).json(user);
         });
     })(req, res, next);

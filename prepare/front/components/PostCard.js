@@ -17,9 +17,9 @@ import { REMOVE_POST_REQUEST } from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 const PostCard = ({ post }) => {
+    //pages/index.js에서 mainPosts에서 하나씩 뜯어서 보내줌
     const dispatch = useDispatch();
 
-    //pages/index.js에서 mainPosts에서 하나씩 뜯어서 보내줌
     const [liked, setLiked] = useState(false); //좋아요
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     //댓글창 열지 말지
@@ -35,7 +35,7 @@ const PostCard = ({ post }) => {
     const onRemovePost = useCallback(() => {
         dispatch({
             type: REMOVE_POST_REQUEST,
-            data: post.id,
+            data: post.id, //지울 포스트의 id
         });
     }, []);
 
@@ -45,7 +45,7 @@ const PostCard = ({ post }) => {
     return (
         <div style={{ marginBottom: 20 }}>
             <Card
-                cover={post.Images[0] && <PostImages images={post.Images} />}
+                cover={post.Images?.[0] && <PostImages images={post.Images} />}
                 //이미지가 존재한다면 PostImages를 출력
                 actions={[
                     //카드 아래에 존재하는 것들
@@ -101,28 +101,28 @@ const PostCard = ({ post }) => {
                     <List
                         header={`${post.Comments.length}개의 댓글`}
                         itemLayout="horizontal"
-                        dataSource={post.Comments}
-                        renderItem={(item) => (
+                        dataSource={post.Comments} //데이터는 여기서 가져와서
+                        renderItem={(
+                            item //이런식으로 출력한다
+                        ) => (
                             <li>
                                 <Comment
                                     author={item.User.nickname} //댓글쓴사람
                                     avatar={
                                         <Avatar>{item.User.nickname[0]}</Avatar> //아바타
                                     }
-                                    content={item.content} //
+                                    content={item.content}
                                 />
                             </li>
                         )}
                     />
                 </div>
             )}
-            {/* <CommentForm />
-            <Comments /> */}
         </div>
     );
 };
 
-PostCard.propTypes = {
+PostCard.PropTypes = {
     post: PropTypes.shape({
         id: PropTypes.number,
         User: PropTypes.object,

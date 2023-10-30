@@ -1,6 +1,5 @@
-import { all, delay, fork, put, throttle } from "redux-saga/effects";
+import { all, delay, fork, put, throttle, call } from "redux-saga/effects";
 import { takeLatest } from "redux-saga/effects";
-import shortId from "shortid";
 import {
     ADD_POST_FAILURE,
     ADD_POST_REQUEST,
@@ -17,25 +16,21 @@ import {
 } from "../reducers/post";
 import { generateDummyPost } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
+import axios from "axios";
 
 //게시글 작성
 function addPostAPI() {
-    return axios.post("/api/post");
+    return axios.post("/post", { content: data });
 }
 
 function* addPost(action) {
     try {
-        yield delay(1000);
-        const id = shortId.generate();
-        // const result = yield call(addPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        const result = yield call(addPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
         yield put({
             type: ADD_POST_SUCCESS,
-            data: {
-                id,
-                content: action.data,
-            },
+            data: result.data,
         });
-        yield put({ type: ADD_POST_TO_ME, data: id });
+        yield put({ type: ADD_POST_TO_ME, data: result.data.id });
         //내가 썼는지 확인하기 위함
     } catch (err) {
         put({ type: ADD_POST_FAILURE, data: err.response.data });
@@ -93,7 +88,6 @@ function* watchRemovePost() {
 function* watchLoadPosts() {
     yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
     //5초안에 들어온 같은 요청은 무시해버림 (throttle)
-    
 }
 
 function loadPostAPI() {
