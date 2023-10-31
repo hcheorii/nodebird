@@ -15,7 +15,7 @@ const Signup = () => {
         color: red;
     `;
 
-    const { signUpLoading, me, signUpDone, signUpError } = useSelector(
+    const { signUpLoading, signUpDone, signUpError } = useSelector(
         (state) => state.user
     );
 
