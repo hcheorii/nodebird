@@ -15,9 +15,14 @@ const Signup = () => {
         color: red;
     `;
 
-    const { signUpLoading, signUpDone, signUpError } = useSelector(
+    const { signUpLoading, me, signUpDone, signUpError } = useSelector(
         (state) => state.user
     );
+    useEffect(() => {
+        if (me && me.id) {
+            Router.replace("/");
+        }
+    }, [me && me.id]);
 
     useEffect(() => {
         if (signUpDone) {

@@ -12,7 +12,6 @@ module.exports = () => {
             async (email, password, done) => {
                 try {
                     //전략 채우는 칸
-
                     const user = await User.findOne({
                         where: { email },
                     });

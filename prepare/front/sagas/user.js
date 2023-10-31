@@ -57,8 +57,7 @@ function logOutAPI() {
 
 function* logOut() {
     try {
-        yield delay(1000);
-        // const result = yield call(logOutAPI); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield call(logOutAPI); //로그인 요청에 대해 결과값으로 받을 수 있다.
         yield put({ type: LOG_OUT_SUCCESS, data: result.data });
     } catch (err) {
         put({ type: LOG_OUT_FAILURE, error: err.response.data });

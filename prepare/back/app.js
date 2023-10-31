@@ -21,8 +21,8 @@ db.sequelize
     .catch(console.error);
 
 dotenv.config();
-
 passportConfig();
+
 app.use(
     cors({
         origin: true,
@@ -43,7 +43,7 @@ app.use(
         saveUninitialized: false,
         resave: false,
         secret: process.env.COOKIE_SECRET,
-    })
+    }) //실제적인 정보를 프론트로 넘기면 안되기때문에, 랜덤한 문자열을 넘겨서 백서버와 프론트서버에 동일한 정보를 가질 수 있게 만들어줌 
 );
 app.use(passport.initialize());
 app.use(passport.session());

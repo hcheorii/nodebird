@@ -70,9 +70,14 @@ router.post("/", async (req, res, next) => {
     }
 });
 
-router.post("/user/logout", (req, res) => {
-    req.logout();
-    req.session.destroy();
-    res.send("OK");
+router.post("/logout", async (req, res, next) => {
+    req.logout((err) => {
+        req.session.destroy();
+        if (err) {
+            res.redirect("/");
+        } else {
+            res.status(200).send("server ok: 로그아웃 완료");
+        }
+    });
 });
 module.exports = router;
