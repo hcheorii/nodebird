@@ -39,7 +39,7 @@ router.post("/login", (req, res, next) => {
                     }, //로그인 오류 해결
                 ],
             });
-            return res.status(200).json(user);
+            return res.status(200).json(fullUserWithoutPassword);
         });
     })(req, res, next);
 });
@@ -68,5 +68,11 @@ router.post("/", async (req, res, next) => {
         console.error(error);
         next(error);
     }
+});
+
+router.post("/user/logout", (req, res) => {
+    req.logout();
+    req.session.destroy();
+    res.send("OK");
 });
 module.exports = router;
