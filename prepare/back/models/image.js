@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
         "Image",
         {
-            src: { type: DataTypes.STRING(20), allowNull: false },
+            src: { type: DataTypes.STRING(200), allowNull: false },
         },
         {
             charset: "utf8",

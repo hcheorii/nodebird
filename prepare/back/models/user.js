@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
         "User",
         {
             //id는 mysql에서 자동으로 넣어주기 때문에 필요없다.
+            //엑셀을 작성한다고 생각
+            //사용자 정보는 이메일, 닉네임, 비밀번호로 구성
             email: {
                 type: DataTypes.STRING(30),
                 //STRIN, INTEGER, BOOLEAN, FLOAT, DATATIME 등이 자주 사용된다.

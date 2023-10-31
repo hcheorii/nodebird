@@ -6,11 +6,10 @@ module.exports = (sequelize, DataTypes) => {
 
         "Post",
         {
-            content: { type: DataTypes.TEXT, allowNull: false },
+            content: { type: DataTypes.TEXT, allowNull: false }, //글자 무제한
         },
         {
-            charset: "utf8mb4", //이모티콘을 사용하려면 mb4를 추가해줘야한다.
-
+            charset: "utf8mb4", //이모티콘을 사용하려면 mb4를 추가해줘야한다
             collate: "utf8mb4_general_ci", //한글 저장
         }
     );

@@ -3,6 +3,7 @@ const env = process.env.NODE_ENV || "development";
 //배포할때는 production, 개발할때는 development
 
 const config = require("../config/config")[env];
+//development가져와라 지금은 개발모드  
 const db = {};
 const sequelize = new Sequelize( //sequelize는 노드와 mysql을 연결시켜주는 역할.
     config.database,
