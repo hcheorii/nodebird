@@ -4,7 +4,7 @@ import PostCard from "../components/PostCard";
 import PostForm from "../components/PostForm";
 import { useEffect } from "react";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
-
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 const Home = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
@@ -12,6 +12,9 @@ const Home = () => {
         (state) => state.post
     );
     useEffect(() => {
+        dispatch({
+            type: LOAD_MY_INFO_REQUEST,
+        });
         dispatch({
             type: LOAD_POSTS_REQUEST, //게시물 불러오기
         });

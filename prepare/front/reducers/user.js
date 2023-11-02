@@ -1,6 +1,10 @@
 import { produce } from "immer";
 
 export const initialValue = {
+    loadUserLoading: false, //로그인 정보 불러오기
+    loadUserDone: false,
+    loadUserError: null,
+
     logInLoading: false, //로그인 시도중
     logInDone: false,
     logInError: null,
@@ -25,6 +29,9 @@ export const initialValue = {
     signUpData: {},
     LoginData: {},
 };
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
@@ -89,6 +96,22 @@ export default (state = initialValue, action) => {
     //draft는 불변성 상관없이 바꾸면 immer가 알아서 불변성있게 만들어준다.
     return produce(state, (draft) => {
         switch (action.type) {
+            //유저정보 가져오기
+            case LOAD_MY_INFO_REQUEST:
+                draft.loadUserLoading = true;
+                draft.loadUserError = null;
+                draft.loadUserDone = false;
+                break;
+            case LOAD_MY_INFO_SUCCESS:
+                draft.loadUserLoading = false;
+                draft.me = action.data; //me가 null이면 로그인되어있지 않음
+                draft.loadUserDone = true;
+                break;
+            case LOAD_MY_INFO_FAILURE:
+                draft.loadUserLoading = false;
+                draft.loadUserError = action.error;
+                break;
+
             //팔로우 시도중
             case FOLLOW_REQUEST:
                 draft.followLoading = true;

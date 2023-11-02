@@ -4,6 +4,9 @@ import {
     LOG_IN_SUCCESS,
     LOG_IN_REQUEST,
     LOG_IN_FAILURE,
+    LOAD_MY_INFO_REQUEST,
+    LOAD_MY_INFO_SUCCESS,
+    LOAD_MY_INFO_FAILURE,
     LOG_OUT_REQUEST,
     LOG_OUT_SUCCESS,
     LOG_OUT_FAILURE,
@@ -18,6 +21,27 @@ import {
     UNFOLLOW_SUCCESS,
 } from "../reducers/user";
 import axios from "axios";
+
+//유저정보 가져오기
+function loadUserAPI(data) {
+    //실제로 서버에 요청을 보내는 부분
+    return axios.get("/user");
+}
+
+function* loadUser(action) {
+    //LOG_IN_REQUEST액션이 디스패치되었을 때 호출 되는 제네레이터 함수.
+    try {
+        const result = yield call(loadUserAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        console.log(result);
+        yield put({ type: LOAD_MY_INFO_SUCCESS, data: result.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
+    } catch (err) {
+        console.log(err);
+        yield put({ type: LOAD_MY_INFO_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
+    }
+}
+function* watchLoadUser() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadUser);
+}
 
 // 로그인
 function logInAPI(data) {
@@ -120,6 +144,7 @@ function* unfollow(action) {
 
 export default function* userSaga() {
     yield all([
+        fork(watchLoadUser),
         fork(watchLogIn),
         fork(watchLogOut),
         fork(watchSignUp),
