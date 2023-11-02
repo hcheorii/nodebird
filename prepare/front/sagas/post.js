@@ -19,7 +19,7 @@ import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import axios from "axios";
 
 //게시글 작성
-function addPostAPI() {
+function addPostAPI(data) {
     return axios.post("/post", { content: data });
 }
 
