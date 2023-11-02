@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import React, { useCallback, useRef, useEffect } from "react";
 import { ADD_POST_REQUEST } from "../reducers/post";
 import useInput from "../hooks/useInput";
-
+import addPost from "../reducers/post";
 const PostForm = () => {
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput("");
@@ -24,6 +24,7 @@ const PostForm = () => {
         dispatch({ type: ADD_POST_REQUEST, data: text });
         // setText(""); //여기서 이렇게 초기화해줄 경우에 서버쪽에서 응답으로 오류가 났을때 게시물이 잘 올라가지 않았음에도 초기화되어버림.
         //그래서 위에 useEffect부분을 따로 작성해줌.
+        // dispatch(addPost(text));
     }, [text]);
 
     const onClickImageUpload = useCallback(() => {

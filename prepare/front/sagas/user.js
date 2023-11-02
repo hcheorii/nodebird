@@ -32,6 +32,7 @@ function* logIn(action) {
         console.log(result);
         yield put({ type: LOG_IN_SUCCESS, data: result.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
     } catch (err) {
+        console.log(err);
         yield put({ type: LOG_IN_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
     }
 }

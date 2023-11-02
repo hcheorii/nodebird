@@ -130,9 +130,9 @@ const reducer = (state = initialValue, action) =>
             case ADD_COMMENT_SUCCESS:
                 //immer버전 (너무 간단함)
                 const post = draft.mainPosts.find(
-                    (v) => v.id === action.data.postId
+                    (v) => v.id === action.data.PostId //routes/post.js에서 PostId를 보내줌
                 ); //해당 게시글 찾기
-                post.Comments.unshift(dummyComment(action.data.content));
+                post.Comments.unshift(action.data);
                 draft.addCommentLoading = false;
                 draft.addCommentDone = true;
                 //댓글 넣어주기

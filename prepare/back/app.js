@@ -8,7 +8,6 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 
-
 const app = express(); //익스프레스 서버
 const db = require("./models");
 const passportConfig = require("./passport");
@@ -25,8 +24,8 @@ passportConfig();
 
 app.use(
     cors({
-        origin: true,
-        credentials: false,
+        origin: "http://localhost:3060",
+        credentials: true, //도메인이 달라도 보낼수 있어짐 3060 -> 3065로 쿠키를 보내준다.
     })
 ); //cors설정
 //res.setHeader("Access-Control-Allow-Origin", "http://localhost:3060");
@@ -43,7 +42,7 @@ app.use(
         saveUninitialized: false,
         resave: false,
         secret: process.env.COOKIE_SECRET,
-    }) //실제적인 정보를 프론트로 넘기면 안되기때문에, 랜덤한 문자열을 넘겨서 백서버와 프론트서버에 동일한 정보를 가질 수 있게 만들어줌 
+    }) //실제적인 정보를 프론트로 넘기면 안되기때문에, 랜덤한 문자열을 넘겨서 백서버와 프론트서버에 동일한 정보를 가질 수 있게 만들어줌
 );
 app.use(passport.initialize());
 app.use(passport.session());
