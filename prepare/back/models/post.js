@@ -20,6 +20,8 @@ module.exports = (sequelize, DataTypes) => {
         db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" }); //해시태그와는 다대다 관게
         db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" });
         //게시글 좋아요와 유저는 다대다 관계, 중간 테이블의 이름은 Like
+        //post.addLikers같은것이 생긴다.
+        //post.removeLikers도 생긴다. 
         db.Post.belongsTo(db.Post, { as: "Retweet" }); //리트윗관계(1대다)
     };
 

@@ -34,6 +34,7 @@ router.get("/", async (req, res, next) => {
             });
             res.status(200).json(fullUserWithoutPassword);
         } else {
+            //유저가 없을때
             res.status(200).json(null);
         }
     } catch (error) {
@@ -120,5 +121,22 @@ router.post("/logout", isLoggedIn, async (req, res, next) => {
             res.status(200).send("server ok: 로그아웃 완료");
         }
     });
+});
+
+router.patch("/nickname", isLoggedIn, async (req, res, next) => {
+    try {
+        await User.update(
+            {
+                nickname: req.body.nickname,
+            },
+            {
+                where: { id: req.user.id },
+            }
+        );
+        res.status(200).json({ nickname: req.body.nickname });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 module.exports = router;

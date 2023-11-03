@@ -19,6 +19,9 @@ import {
     UNFOLLOW_FAILURE,
     UNFOLLOW_REQUEST,
     UNFOLLOW_SUCCESS,
+    CHANGE_NICKNAME_REQUEST,
+    CHANGE_NICKNAME_FAILURE,
+    CHANGE_NICKNAME_SUCCESS,
 } from "../reducers/user";
 import axios from "axios";
 
@@ -39,9 +42,6 @@ function* loadUser(action) {
         yield put({ type: LOAD_MY_INFO_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
     }
 }
-function* watchLoadUser() {
-    yield takeLatest(LOAD_MY_INFO_REQUEST, loadUser);
-}
 
 // 로그인
 function logInAPI(data) {
@@ -60,21 +60,8 @@ function* logIn(action) {
         yield put({ type: LOG_IN_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
     }
 }
-function* watchLogIn() {
-    //액션을 감시하고 필요한 작업을 수행하는데에 사용.
-    //이벤트 리스터 같은 역할.
-    yield takeLatest(LOG_IN_REQUEST, logIn); //LOG_IN이라는 액션이 실행되면, logIn함수를 실행시킨다.
-
-    //take는 일회용이다. takeEvery는 계속 받을 수 있다. 하지만 여러번 입력을 한번에 하게되면 그 여러개 요청이 모두 가기 때문에
-    //takeLatest를 사용한다.
-    //완료되지 않은 것들 중에서 로딩중인것들을 중단. 응답을 취소.
-    //throttle은 초를 정해서 그 안에서는 요청은 한번만 할 수 있게 설정할 수 있다.
-}
 
 //로그아웃
-function* watchLogOut() {
-    yield takeLatest(LOG_OUT_REQUEST, logOut);
-}
 
 function logOutAPI() {
     return axios.post("/user/logout");
@@ -94,9 +81,7 @@ function* logOut() {
 function signUpAPI(data) {
     return axios.post("/user", data); //백엔드 서버 주소
 }
-function* watchSignUp() {
-    yield takeLatest(SIGN_UP_REQUEST, signUp);
-}
+
 function* signUp(action) {
     try {
         const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
@@ -112,9 +97,7 @@ function* signUp(action) {
 function followAPI() {
     return axios("/api/signup");
 }
-function* watchFollow() {
-    yield takeLatest(FOLLOW_REQUEST, follow);
-}
+
 function* follow(action) {
     try {
         yield delay(1000);
@@ -129,9 +112,7 @@ function* follow(action) {
 function unfollowAPI() {
     return axios("/api/signup");
 }
-function* watchUnollow() {
-    yield takeLatest(UNFOLLOW_REQUEST, unfollow);
-}
+
 function* unfollow(action) {
     try {
         yield delay(1000);
@@ -142,8 +123,55 @@ function* unfollow(action) {
     }
 }
 
+//닉네임 변경
+function changeNicknameAPI(data) {
+    return axios.patch("/user/nickname", { nickname: data });
+}
+
+function* changeNickname(action) {
+    try {
+        const result = yield call(changeNicknameAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({ type: CHANGE_NICKNAME_REQUEST, data: result.data });
+    } catch (err) {
+        put({ type: CHANGE_NICKNAME_FAILURE, error: err.response.data });
+    }
+}
+
+function* watchLogIn() {
+    //액션을 감시하고 필요한 작업을 수행하는데에 사용.
+    //이벤트 리스터 같은 역할.
+    yield takeLatest(LOG_IN_REQUEST, logIn); //LOG_IN이라는 액션이 실행되면, logIn함수를 실행시킨다.
+
+    //take는 일회용이다. takeEvery는 계속 받을 수 있다. 하지만 여러번 입력을 한번에 하게되면 그 여러개 요청이 모두 가기 때문에
+    //takeLatest를 사용한다.
+    //완료되지 않은 것들 중에서 로딩중인것들을 중단. 응답을 취소.
+    //throttle은 초를 정해서 그 안에서는 요청은 한번만 할 수 있게 설정할 수 있다.
+}
+
+function* watchLoadUser() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadUser);
+}
+
+function* watchLogOut() {
+    yield takeLatest(LOG_OUT_REQUEST, logOut);
+}
+
+function* watchSignUp() {
+    yield takeLatest(SIGN_UP_REQUEST, signUp);
+}
+function* watchFollow() {
+    yield takeLatest(FOLLOW_REQUEST, follow);
+}
+
+function* watchUnollow() {
+    yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+}
+function* watchChangeNickname() {
+    yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
 export default function* userSaga() {
     yield all([
+        fork(watchChangeNickname),
         fork(watchLoadUser),
         fork(watchLogIn),
         fork(watchLogOut),

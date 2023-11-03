@@ -13,7 +13,7 @@ const Home = () => {
     );
     useEffect(() => {
         dispatch({
-            type: LOAD_MY_INFO_REQUEST,
+            type: LOAD_MY_INFO_REQUEST, //유저정보 가져오기
         });
         dispatch({
             type: LOAD_POSTS_REQUEST, //게시물 불러오기
