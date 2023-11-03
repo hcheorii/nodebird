@@ -1,9 +1,11 @@
 const express = require("express");
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
+
 const userRouter = require("./routes/user");
 const cors = require("cors");
 const session = require("express-session");
-
+const morgan = require("morgan");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
@@ -22,6 +24,7 @@ db.sequelize
 dotenv.config();
 passportConfig();
 
+app.use(morgan("dev"));
 app.use(
     cors({
         origin: "http://localhost:3060",
@@ -54,13 +57,7 @@ app.get("/api", (req, res) => {
     res.send("hello api");
 });
 
-app.get("/api/posts", (req, res) => {
-    res.json([
-        { id: 1, content: "hello" },
-        { id: 2, content: "hello2" },
-        { id: 3, content: "hello3" },
-    ]);
-});
+app.use("/posts", postsRouter); //"/post"가 중복되므로 앞으로 뽑아줄 수 있다.
 
 app.use("/post", postRouter); //"/post"가 중복되므로 앞으로 뽑아줄 수 있다.
 app.use("/user", userRouter); //"/post"가 중복되므로 앞으로 뽑아줄 수 있다.

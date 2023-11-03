@@ -14,7 +14,6 @@ import {
     LOAD_POSTS_SUCCESS,
     LOAD_POSTS_FAILURE,
 } from "../reducers/post";
-import { generateDummyPost } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import axios from "axios";
 
@@ -54,7 +53,7 @@ function* addComment(action) {
         const result = yield call(addCommentAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
         yield put({ type: ADD_COMMENT_SUCCESS, data: result.data });
     } catch (err) {
-        console.log(error);
+        console.log(err);
         put({ type: ADD_COMMENT_FAILURE, data: err.response.data });
     }
 }
@@ -93,19 +92,19 @@ function* watchLoadPosts() {
 }
 
 function loadPostAPI() {
-    return axios.post("/api/post");
+    return axios.get("/posts");
 }
 
 function* loadPosts(action) {
     try {
-        yield delay(1000);
-        // const result = yield call(addPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        const result = yield call(loadPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
         yield put({
             type: LOAD_POSTS_SUCCESS,
-            data: generateDummyPost(10),
+            data: result.data,
             //스크롤 넘어갈때, 10개씩 게속 불러온다.
         });
     } catch (err) {
+        console.error(err);
         put({ type: LOAD_POSTS_FAILURE, data: err.response.data });
     }
 }

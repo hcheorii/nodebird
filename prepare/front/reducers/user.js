@@ -60,24 +60,6 @@ export const UNFOLLOW_FAILURE = "UNFOLLOW_FAILURE";
 export const ADD_POST_TO_ME = "ADD_POST_TO_ME"; //user reducer상태를 바꾸는 액션
 export const REMOVE_POST_OF_ME = "REMOVE_POST_OF_ME"; //user reducer상태를 바꾸는 액션
 
-//함수
-const dummyUser = (data) => ({
-    ...data,
-    nickname: "hyeon cheol lee",
-    id: 1,
-    Posts: [{ id: 1 }],
-    Followings: [
-        { nickname: "미노이" },
-        { nickname: "미노이2" },
-        { nickname: "미노이3" },
-    ],
-    Followers: [
-        { nickname: "미노이" },
-        { nickname: "미노이2" },
-        { nickname: "미노이3" },
-    ],
-});
-
 export const loginRequestAction = (data) => {
     return {
         type: LOG_IN_REQUEST,
