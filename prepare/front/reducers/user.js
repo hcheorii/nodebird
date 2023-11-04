@@ -102,7 +102,7 @@ export default (state = initialValue, action) => {
                 break;
             case FOLLOW_SUCCESS:
                 draft.followLoading = false;
-                draft.me.Followings.push({ id: action.data });
+                draft.me.Followings.push({ id: action.data.UserId });
                 draft.followDone = true;
                 break;
             case FOLLOW_FAILURE:
@@ -119,7 +119,7 @@ export default (state = initialValue, action) => {
             case UNFOLLOW_SUCCESS:
                 draft.unfollowLoading = false;
                 draft.me.Followings = draft.me.Followings.filter(
-                    (v) => v.id !== action.data
+                    (v) => v.id !== action.data.UserId
                 ); //그 해당 사람만 빠지게 된다.
                 draft.unfollowDone = true;
                 break;

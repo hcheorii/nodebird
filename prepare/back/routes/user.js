@@ -139,4 +139,40 @@ router.patch("/nickname", isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
+    //PATCH /user/1/follwow (팔로우 하기)
+    try {
+        const user = await User.findOne({
+            where: { id: req.params.userId },
+        });
+        if (!user) {
+            //팔로우하려는 유저가 없는 유저라면?
+            res.status(403).send("없는 사람을 팔로우하려고 하시네요");
+        }
+        await user.addFollowers(req.user.id);
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
+    //DELETE /user/1/follwow (팔로우 취소)
+    try {
+        const user = await User.findOne({
+            where: { id: req.params.userId },
+        });
+        if (!user) {
+            //팔로우 취소하려는 유저가 없는 유저라면?
+            res.status(403).send("없는 사람을 언팔로우하려고 하시네요");
+        }
+        await user.removeFollowers(req.user.id);
+        res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
 module.exports = router;

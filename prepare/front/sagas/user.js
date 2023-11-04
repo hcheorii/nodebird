@@ -94,31 +94,31 @@ function* signUp(action) {
 }
 
 //팔로우
-function followAPI() {
-    return axios("/api/signup");
+function followAPI(data) {
+    return axios.patch(`/user/${data}/follow`);
 }
 
 function* follow(action) {
     try {
-        yield delay(1000);
-        // const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
-        yield put({ type: FOLLOW_SUCCESS, data: action.data });
+        const result = yield call(followAPI, action.data);
+        yield put({ type: FOLLOW_SUCCESS, data: result.data });
     } catch (err) {
+        console.error(err);
         put({ type: FOLLOW_FAILURE, error: err.response.data });
     }
 }
 
 //언팔로우
-function unfollowAPI() {
-    return axios("/api/signup");
+function unfollowAPI(data) {
+    return axios.delete(`/user/${data}/follow`);
 }
 
 function* unfollow(action) {
     try {
-        yield delay(1000);
-        // const result = yield call(signUpAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
-        yield put({ type: UNFOLLOW_SUCCESS, data: action.data });
+        const result = yield call(unfollowAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({ type: UNFOLLOW_SUCCESS, data: result.data });
     } catch (err) {
+        console.error(err);
         put({ type: UNFOLLOW_FAILURE, error: err.response.data });
     }
 }
@@ -164,7 +164,7 @@ function* watchFollow() {
     yield takeLatest(FOLLOW_REQUEST, follow);
 }
 
-function* watchUnollow() {
+function* watchUnfollow() {
     yield takeLatest(UNFOLLOW_REQUEST, unfollow);
 }
 function* watchChangeNickname() {
@@ -178,6 +178,6 @@ export default function* userSaga() {
         fork(watchLogOut),
         fork(watchSignUp),
         fork(watchFollow),
-        fork(watchUnollow),
+        fork(watchUnfollow),
     ]);
 }
