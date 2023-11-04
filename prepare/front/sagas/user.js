@@ -131,8 +131,9 @@ function changeNicknameAPI(data) {
 function* changeNickname(action) {
     try {
         const result = yield call(changeNicknameAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
-        yield put({ type: CHANGE_NICKNAME_REQUEST, data: result.data });
+        yield put({ type: CHANGE_NICKNAME_SUCCESS, data: result.data });
     } catch (err) {
+        console.error(err);
         put({ type: CHANGE_NICKNAME_FAILURE, error: err.response.data });
     }
 }
