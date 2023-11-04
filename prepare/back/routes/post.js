@@ -1,9 +1,17 @@
 const express = require("express");
-
+const fs = require("fs");
 const router = express.Router();
 const { Post, Image, Comment, User } = require("../models");
-const user = require("../models/user");
 const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
+const multer = require("multer");
+const path = require("path");
+
+try {
+    fs.accessSync("uploads");
+} catch (error) {
+    console.log("uploads폴더가 없으므로 생성합니다.");
+    fs.mkdirSync("uploads");
+}
 
 router.post("/", isLoggedIn, async (req, res, next) => {
     // 보기에는 "/"로 되어있지만 실제로는 "/post"로 되어있다.
@@ -123,5 +131,34 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
         next(error);
     }
 });
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination(req, file, done) {
+            done(null, "uploads"); //uploads라는 폴더에 저장할것.
+        },
+        filename(req, file, done) {
+            //제로초.png
+            const ext = path.extname(file.originalname); //확장자 추출 (.png)
+            const basename = path.basename(file.originalname, ext); //제로초
+
+            done(null, basename + new Date().getTime() + ext); //파일 이름 겹치지 않게 이름 뒤에 시간 초 붙혀줌
+        },
+    }),
+    limits: {
+        fileSize: 20 * 1024 * 1024, //20MB
+    },
+});
+router.post(
+    "/images",
+    isLoggedIn,
+    upload.array("image"), //PostForm.js에서input에 올린 이미지가 배열로 들어감 (이미지를 여러장 올릴 수 있게 하기 위해서)
+    (req, res, next) => {
+        // POST /post/images/
+        //이곳은 이미지 업로드 후 실행되는 부분, 업로드는 위에 upload에서 이미 다 올라감
+        console.log(req.files);
+        res.json(req.files.map((v) => v.filename)); //프론트로 보내줌
+    }
+);
 module.exports = router;
 //node에서는 import와 export defau lt를 사용하지 않고 require를 사용한다.

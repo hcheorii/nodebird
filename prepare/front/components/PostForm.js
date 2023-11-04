@@ -1,9 +1,9 @@
 import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useCallback, useRef, useEffect } from "react";
-import { ADD_POST_REQUEST } from "../reducers/post";
+import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from "../reducers/post";
 import useInput from "../hooks/useInput";
-import addPost from "../reducers/post";
+
 const PostForm = () => {
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput("");
@@ -34,10 +34,22 @@ const PostForm = () => {
         imageInput.current.click();
     }, [imageInput.current]);
 
+    const onChangeImages = useCallback((e) => {
+        console.log("images", e.target.files);
+        const imageFormData = new FormData();
+        [].forEach.call(e.target.files, (f) => {
+            imageFormData.append("image", f);
+        });
+        dispatch({
+            type: UPLOAD_IMAGES_REQUEST,
+            data: imageFormData,
+        });
+    }, []);
+
     return (
         <Form
             style={{ margin: "10px 0 20px" }}
-            encType="multipart/form-data"
+            encType="multipart/form-data" //이미지의 형식. 비디오도 대부분 이 형식을 따름
             onFinish={onSubmit}
         >
             <Input.TextArea
@@ -47,7 +59,14 @@ const PostForm = () => {
                 placeholder="어떤 신기한 일이 있었나요?"
             />
             <div>
-                <input type="file" multiple hidden ref={imageInput} />
+                <input
+                    type="file"
+                    name="image"
+                    multiple
+                    hidden
+                    ref={imageInput}
+                    onChange={onChangeImages} //이미지를 선택하고 확인을 눌렀을 때 발생하는 이벤트
+                />
                 <Button onClick={onClickImageUpload}>이미지 업로드</Button>
                 <Button
                     type="primary"

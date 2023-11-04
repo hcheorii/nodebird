@@ -29,8 +29,15 @@ export const initialValue = {
     unlikePostLoading: false,
     unlikePostDone: false,
     unlikePostError: null,
+
+    uploadImagesLoading: false,
+    uploadImagesDone: false,
+    uploadImagesError: null,
 };
 //가짜 데이터
+export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
+export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
+export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";
 
 export const LIKE_POST_REQUEST = "LIKE_POST_REQUEST";
 export const LIKE_POST_SUCCESS = "LIKE_POST_SUCCESS";
@@ -211,6 +218,23 @@ const reducer = (state = initialValue, action) =>
             case REMOVE_POST_FAILURE:
                 draft.removePostLoading = false;
                 draft.removePostError = action.error;
+                break;
+
+            //이미지 업로드
+            case UPLOAD_IMAGES_REQUEST:
+                draft.uploadImagesDone = false;
+                draft.uploadImagesLoading = true;
+                draft.uploadImagesError = null;
+                break;
+
+            case UPLOAD_IMAGES_SUCCESS:
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesDone = true;
+                draft.imagePaths = action.data;
+                break;
+            case UPLOAD_IMAGES_FAILURE:
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesError = action.error;
                 break;
             default:
                 break;
