@@ -95,7 +95,7 @@ function* addComment(action) {
 
 //게시글 삭제
 function removePostAPI(data) {
-    return axios.post(`/post/${data}`); //data는 postid
+    return axios.delete(`/post/${data}`); //data는 postid
 }
 
 function* removePost(action) {
@@ -106,9 +106,9 @@ function* removePost(action) {
             data: result.data,
         });
         yield put({ type: REMOVE_POST_OF_ME, data: action.data });
-    } catch (err) {
-        console.error(err);
-        put({ type: REMOVE_POST_FAILURE, data: err.response.data });
+    } catch (error) {
+        console.error(error);
+        put({ type: REMOVE_POST_FAILURE, data: error.response.data });
     }
 }
 

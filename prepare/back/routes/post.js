@@ -59,7 +59,7 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
         }
         const comment = await Comment.create({
             content: req.body.content,
-            PostId: parseInt(req.params.postId),
+            PostId: parseInt(req.params.postId), //문자열로 넘어가기 때문에 int형으로 바꿔줘야한다.
             UserId: req.user.id,
         });
         const fullComment = await Comment.findOne({
