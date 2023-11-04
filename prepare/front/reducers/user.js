@@ -25,6 +25,14 @@ export const initialValue = {
     unfollowDone: false,
     unfollowError: null,
 
+    loadFollowersLoading: false, // 닉네임 변경 시도중
+    loadFollowersDone: false,
+    loadFollowersError: null,
+
+    loadFollowingsLoading: false, // 닉네임 변경 시도중
+    loadFollowingsDone: false,
+    loadFollowingsError: null,
+
     me: null,
     signUpData: {},
     LoginData: {},
@@ -32,6 +40,18 @@ export const initialValue = {
 export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
 export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
 export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
+
+export const REMOVE_FOLLOWER_REQUEST = "REMOVE_FOLLOWER_REQUEST";
+export const REMOVE_FOLLOWER_SUCCESS = "REMOVE_FOLLOWER_SUCCESS";
+export const REMOVE_FOLLOWER_FAILURE = "REMOVE_FOLLOWER_FAILURE";
+
+export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST";
+export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS";
+export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE";
+
+export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLWINGS_REQUEST";
+export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLWINGS_SUCCESS";
+export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLWINGS_FAILURE";
 
 export const LOG_IN_REQUEST = "LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "LOG_IN_SUCCESS";
@@ -214,6 +234,55 @@ export default (state = initialValue, action) => {
             //     },
             // };
 
+            //팔로워불러오기
+            case LOAD_FOLLOWERS_REQUEST:
+                draft.loadFollowersLoading = true;
+                draft.loadFollowersError = null;
+                draft.loadFollowersDone = false;
+                break;
+            case LOAD_FOLLOWERS_SUCCESS:
+                draft.loadFollowersLoading = false;
+                draft.me.Followers = action.data;
+                draft.loadFollowersDone = true;
+                break;
+            case LOAD_FOLLOWERS_FAILURE:
+                draft.loadFollowersLoading = false;
+                draft.loadFollowersError = action.error;
+                break;
+
+            //팔로잉들 불러오기
+            case LOAD_FOLLOWINGS_REQUEST:
+                draft.loadFollowingsLoading = true;
+                draft.loadFollowingsError = null;
+                draft.loadFollowingsDone = false;
+                break;
+            case LOAD_FOLLOWINGS_SUCCESS:
+                draft.loadFollowingsLoading = false;
+                draft.me.Followings = action.data;
+                draft.loadFollowingsDone = true;
+                break;
+            case LOAD_FOLLOWINGS_FAILURE:
+                draft.loadFollowingsLoading = false;
+                draft.loadFollowingsError = action.error;
+                break;
+
+            //팔로워 삭제
+            case REMOVE_FOLLOWER_REQUEST:
+                draft.removeFollowerLoading = true;
+                draft.removeFollowerError = null;
+                draft.removeFollowerDone = false;
+                break;
+            case REMOVE_FOLLOWER_SUCCESS:
+                draft.removeFollowerLoading = false;
+                draft.me.Followers = draft.me.Followers.filter(
+                    (v) => v.id !== action.data.UserId
+                ); //그 해당 사람만 빠지게 된다.
+                draft.removeFollowerDone = true;
+                break;
+            case REMOVE_FOLLOWER_FAILURE:
+                draft.removeFollowerLoading = false;
+                draft.removeFollowerError = action.error;
+                break;
             default:
                 break;
         }

@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, delay, put, call } from "redux-saga/effects";
+import { all, fork, takeLatest, put, call } from "redux-saga/effects";
 
 import {
     LOG_IN_SUCCESS,
@@ -22,6 +22,15 @@ import {
     CHANGE_NICKNAME_REQUEST,
     CHANGE_NICKNAME_FAILURE,
     CHANGE_NICKNAME_SUCCESS,
+    LOAD_FOLLOWERS_REQUEST,
+    LOAD_FOLLOWERS_FAILURE,
+    LOAD_FOLLOWERS_SUCCESS,
+    LOAD_FOLLOWINGS_REQUEST,
+    LOAD_FOLLOWINGS_FAILURE,
+    LOAD_FOLLOWINGS_SUCCESS,
+    REMOVE_FOLLOWER_FAILURE,
+    REMOVE_FOLLOWER_REQUEST,
+    REMOVE_FOLLOWER_SUCCESS,
 } from "../reducers/user";
 import axios from "axios";
 
@@ -138,6 +147,53 @@ function* changeNickname(action) {
     }
 }
 
+//팔로워 불러오기
+function loadFollowersAPI(data) {
+    return axios.get("/user/followers", data);
+}
+
+function* loadFollowers(action) {
+    try {
+        const result = yield call(loadFollowersAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        console.log(result);
+        yield put({ type: LOAD_FOLLOWERS_SUCCESS, data: result.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
+    } catch (err) {
+        console.log(err);
+        yield put({ type: LOAD_FOLLOWERS_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
+    }
+}
+
+//팔로잉 불러오기
+function loadFollowingsAPI(data) {
+    return axios.get("/user/followings", data);
+}
+
+function* loadFollowings(action) {
+    try {
+        const result = yield call(loadFollowingsAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        console.log(result);
+        yield put({ type: LOAD_FOLLOWINGS_SUCCESS, data: result.data }); //성공하면 로그인 정보 데이터를 Redux에 저장.
+    } catch (err) {
+        console.log(err);
+        yield put({ type: LOAD_FOLLOWINGS_FAILURE, error: err.response.data }); //실패하면 에러 데이터를 Redux에 저장.
+    }
+}
+
+//팔로워 삭제
+function removeFollowerAPI(data) {
+    return axios.delete(`/user/follower/${data}`);
+}
+
+function* removeFollower(action) {
+    try {
+        const result = yield call(removeFollowerAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        yield put({ type: REMOVE_FOLLOWER_SUCCESS, data: result.data });
+    } catch (err) {
+        console.error(err);
+        put({ type: REMOVE_FOLLOWER_FAILURE, error: err.response.data });
+    }
+}
+
 function* watchLogIn() {
     //액션을 감시하고 필요한 작업을 수행하는데에 사용.
     //이벤트 리스터 같은 역할.
@@ -170,8 +226,20 @@ function* watchUnfollow() {
 function* watchChangeNickname() {
     yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
 }
+function* watchLoadFollowers() {
+    yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+function* watchLoadFollowings() {
+    yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+function* watchRemoveFollower() {
+    yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
 export default function* userSaga() {
     yield all([
+        fork(watchRemoveFollower),
+        fork(watchLoadFollowers),
+        fork(watchLoadFollowings),
         fork(watchChangeNickname),
         fork(watchLoadUser),
         fork(watchLogIn),
