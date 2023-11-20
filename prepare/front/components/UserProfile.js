@@ -1,9 +1,12 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Avatar, Button } from "antd";
-
+import styled from "styled-components";
 import { logoutRequestAction } from "../reducers/user";
 
+const ButtonWrapper = styled(Button)`
+    margin-left: 40px;
+`;
 const UserProfile = () => {
     const dispatch = useDispatch();
     const { me, logOutLoading } = useSelector((state) => state.user);
@@ -16,7 +19,7 @@ const UserProfile = () => {
         <Card
             actions={[
                 <div key="twit">
-                    짹짹
+                    포스팅
                     <br />
                     {me.Posts.length}
                 </div>,
@@ -36,9 +39,9 @@ const UserProfile = () => {
                 avatar={<Avatar>{me.nickname[0]}</Avatar>}
                 title={me.nickname}
             />
-            <Button onClick={onLogOut} loading={logOutLoading}>
+            <ButtonWrapper onClick={onLogOut} loading={logOutLoading}>
                 로그아웃
-            </Button>
+            </ButtonWrapper>
         </Card>
     );
 };

@@ -17,42 +17,62 @@ import {
     REMOVE_POST_REQUEST,
     LIKE_POST_REQUEST,
     UNLIKE_POST_REQUEST,
+    RETWEET_REQUEST,
 } from "../reducers/post";
 import FollowButton from "./FollowButton";
 
 const PostCard = ({ post }) => {
     //pages/index.js에서 mainPosts에서 하나씩 뜯어서 보내줌
     const dispatch = useDispatch();
+    const id = useSelector((state) => state.user.me?.id); //내 아이디
 
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     //댓글창 열지 말지
 
     const onLike = useCallback(() => {
-        dispatch({
+        if (!id) {
+            return alert("로그인이 필요합니다.");
+        }
+        return dispatch({
             type: LIKE_POST_REQUEST,
             data: post.id,
         });
-    }, []); //좋아요
+    }, [id]); //좋아요
 
     const onUnlike = useCallback(() => {
-        dispatch({
+        if (!id) {
+            return alert("로그인이 필요합니다.");
+        }
+        return dispatch({
             type: UNLIKE_POST_REQUEST,
             data: post.id,
         });
-    }, []); //좋아요 취소
+    }, [id]); //좋아요 취소
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []); //폼 버튼 한번 더 누르면 폼 닫기
 
     const onRemovePost = useCallback(() => {
+        if (!id) {
+            return alert("로그인이 필요합니다.");
+        }
         return dispatch({
             type: REMOVE_POST_REQUEST,
             data: post.id,
         });
     }, [id]);
 
-    const id = useSelector((state) => state.user.me?.id);
+    const onRetweet = useCallback(() => {
+        if (!id) {
+            return alert("로그인이 필요합니다.");
+        }
+        return dispatch({
+            type: RETWEET_REQUEST,
+            data: post.id,
+        });
+    }, [id]);
+
     const { removePostloading } = useSelector((state) => state.post);
     const liked = post.Likers.find((v) => v.id === id); //게시글 좋아요 누른 사람 중에 내가 있는지.
 
@@ -63,7 +83,7 @@ const PostCard = ({ post }) => {
                 //이미지가 존재한다면 PostImages를 출력
                 actions={[
                     //카드 아래에 존재하는 것들
-                    <RetweetOutlined key="retweet" />,
+                    <RetweetOutlined key="retweet" onClick={onRetweet} />,
                     liked ? (
                         <HeartTwoTone twoToneColor="red" onClick={onUnlike} />
                     ) : (

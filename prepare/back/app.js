@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const path = require("path");
 
 const app = express(); //익스프레스 서버
 const db = require("./models");
@@ -40,6 +41,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //form에서 제출한 것을 넘겨준다.
 //front에서 보낸 action.data를 req.body에 넣어주느 역할
+
+app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(
     session({
         saveUninitialized: false,

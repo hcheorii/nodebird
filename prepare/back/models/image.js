@@ -6,11 +6,10 @@ module.exports = (sequelize, DataTypes) => {
 
         "Image",
         {
-            src: { type: DataTypes.STRING(200), allowNull: false },
+            src: { type: DataTypes.STRING(10000000), allowNull: false },
         },
         {
             charset: "utf8",
-
             collate: "utf8_general_ci", //한글 저장
         }
     );

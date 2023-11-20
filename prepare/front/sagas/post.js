@@ -22,6 +22,9 @@ import {
     UPLOAD_IMAGES_REQUEST,
     UPLOAD_IMAGES_SUCCESS,
     UPLOAD_IMAGES_FAILURE,
+    RETWEET_REQUEST,
+    RETWEET_SUCCESS,
+    RETWEET_FAILURE,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import axios from "axios";
@@ -61,7 +64,7 @@ function* unlikePost(action) {
 
 //게시글 작성
 function addPostAPI(data) {
-    return axios.post("/post", { content: data });
+    return axios.post("/post", data);
 }
 
 function* addPost(action) {
@@ -116,7 +119,6 @@ function* removePost(action) {
 }
 
 //게시글 불러오기
-
 function loadPostAPI() {
     return axios.get("/posts");
 }
@@ -153,6 +155,24 @@ function* uploadImages(action) {
     }
 }
 
+//리트윗
+function retweetAPI(data) {
+    return axios.post(`/post/${data}retweet`); //data는 formdata다
+}
+
+function* retweet(action) {
+    try {
+        const result = yield call(retweetAPI, action.data);
+        yield put({
+            type: RETWEET_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        put({ type: RETWEET_FAILURE, data: err.response.data });
+    }
+}
+
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);
     //ADD_POST_REQUEST 가 요청되면, addPost실행
@@ -181,8 +201,13 @@ function* watchUploadImages() {
 function* watchLikePost() {
     yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
+
+function* watchRetweet() {
+    yield takeLatest(RETWEET_REQUEST, retweet);
+}
 export default function* postSaga() {
     yield all([
+        fork(watchRetweet),
         fork(watchUploadImages),
         fork(watchAddPost),
         fork(watchLikePost),

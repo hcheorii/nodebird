@@ -1,15 +1,17 @@
 import { Form, Input, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import React, { useCallback, useRef, useEffect } from "react";
-import { ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST } from "../reducers/post";
+import {
+    ADD_POST_REQUEST,
+    UPLOAD_IMAGES_REQUEST,
+    REMOVE_IMAGE,
+} from "../reducers/post";
 import useInput from "../hooks/useInput";
 
 const PostForm = () => {
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput("");
-    const { imagePaths, addPostDone, addPostloading } = useSelector(
-        (state) => state.post
-    );
+    const { imagePaths, addPostDone } = useSelector((state) => state.post);
 
     const imageInput = useRef();
     //ref는 실제DOM에 접근하기 위해서 사용
@@ -21,14 +23,22 @@ const PostForm = () => {
     }, [addPostDone]);
 
     const onSubmit = useCallback(() => {
-        dispatch({
-            type: ADD_POST_REQUEST,
-            data: text,
+        if (!text || !text.trim()) {
+            return alert("게시글을 작성하세요.");
+        }
+        const formData = new FormData();
+        imagePaths.forEach((p) => {
+            formData.append("image", p);
+        });
+        formData.append("content", text);
+        return dispatch({
+            type: ADD_POST_REQUEST, //이미지와 text둘다 보내주기
+            data: formData,
         });
         // setText(""); //여기서 이렇게 초기화해줄 경우에 서버쪽에서 응답으로 오류가 났을때 게시물이 잘 올라가지 않았음에도 초기화되어버림.
         //그래서 위에 useEffect부분을 따로 작성해줌.
         // dispatch(addPost(text));
-    }, [text]);
+    }, [text, imagePaths]);
 
     const onClickImageUpload = useCallback(() => {
         imageInput.current.click();
@@ -45,6 +55,13 @@ const PostForm = () => {
             data: imageFormData,
         });
     }, []);
+
+    const onRemoveImage = useCallback((index) => () => {
+        dispatch({
+            type: REMOVE_IMAGE,
+            data: index,
+        });
+    });
 
     return (
         <Form
@@ -77,11 +94,18 @@ const PostForm = () => {
                 </Button>
             </div>
             <div>
-                {imagePaths.map((v) => {
+                {imagePaths.map((v, i) => (
                     <div key={v} style={{ display: "inline-block" }}>
-                        <img src={v} style={{ width: "200px" }} alt={v} />
-                    </div>;
-                })}
+                        <img
+                            src={`http://localhost:3065/${v}`}
+                            style={{ width: "200px" }}
+                            alt={v}
+                        />
+                        <div>
+                            <Button onClick={onRemoveImage(i)}>제거</Button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </Form>
     );
