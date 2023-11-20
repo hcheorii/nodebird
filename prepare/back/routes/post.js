@@ -213,7 +213,7 @@ router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
             //자기 게시글 리트윗 한거, 자기 게시글을 리트윗한걸 다시 리트윗하는거는 막겠다.
             return res.status(403).send("자신의 글은 리트윗할 수 없습니다.");
         }
-        const retweetTargetId = post.RetweetId || post.id;
+        const retweetTargetId = post.RetweetId || post.id; //남의글을 리트윗한 남의글은 가능.
         res.status(201).json(fullComment);
     } catch (error) {
         console.error(error);
