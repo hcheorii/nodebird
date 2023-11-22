@@ -1,11 +1,18 @@
 const express = require("express");
 const { Post, User, Image, Comment } = require("../models");
 const router = express.Router();
+const { Op } = require("sequelize");
 
 router.get("/", async (req, res, next) => {
     //게시글 여러개 가져오는 것
     try {
+        const where = {};
+        if (parseInt(req.query.lastId, 10)) {
+            //초기 로딩이 아닐때
+            where.id = { [Op.lt]: parseInt(req.query.lastId, 10) }; //lastId보다 작은 10개
+        }
         const posts = await Post.findAll({
+            where,
             limit: 10,
             order: [
                 ["createdAt", "DESC"],

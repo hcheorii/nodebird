@@ -33,9 +33,11 @@ const Home = () => {
             ) {
                 if (hasMorePost && !loadPostsLoading) {
                     //로딩중이지 않을때만 딱 한번
+                    const lastId = mainPosts[mainPosts.length - 1].id;
                     dispatch({
                         //새로운거 불러와라
                         type: LOAD_POSTS_REQUEST,
+                        lastId,
                     });
                 }
             }
@@ -44,7 +46,7 @@ const Home = () => {
         return () => {
             window.removeEventListener("scroll", onScroll);
         };
-    }, [hasMorePost, loadPostsLoading]);
+    }, [hasMorePost, loadPostsLoading, mainPosts]);
 
     return (
         <AppLayout>

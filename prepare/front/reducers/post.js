@@ -160,10 +160,10 @@ const reducer = (state = initialValue, action) =>
             case LOAD_POSTS_SUCCESS:
                 draft.loadPostsLoading = false;
                 draft.loadPostsDone = true;
-                draft.mainPosts = action.data.concat(draft.mainPosts);
+                draft.mainPosts = draft.mainPosts.concat(action.data);
                 //concat은 두개 이상의 배열을 합칠 때 사용
                 //action.data에는 더미데이터들이 들어있고 draft.mainPosts는 원래 데이터
-                draft.hasMorePost = draft.mainPosts.length < 50;
+                draft.hasMorePost = action.data.length === 10;
                 //50개보다 적으면 불러와야함
                 break;
             case LOAD_POSTS_FAILURE:

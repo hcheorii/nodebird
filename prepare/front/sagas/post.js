@@ -119,13 +119,13 @@ function* removePost(action) {
 }
 
 //게시글 불러오기
-function loadPostAPI() {
-    return axios.get("/posts");
+function loadPostAPI(lastId) {
+    return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPosts(action) {
     try {
-        const result = yield call(loadPostAPI, action.data); //로그인 요청에 대해 결과값으로 받을 수 있다.
+        const result = yield call(loadPostAPI, action.lastId); //로그인 요청에 대해 결과값으로 받을 수 있다.
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,
