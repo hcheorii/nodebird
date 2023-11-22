@@ -25,15 +25,9 @@ const PostCard = ({ post }) => {
     //pages/index.js에서 mainPosts에서 하나씩 뜯어서 보내줌
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id); //내 아이디
-    const { retweetError } = useSelector((state) => state.post);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     //댓글창 열지 말지
 
-    // useEffect(() => {
-    //     if (retweetError) {
-    //         alert(retweetError);
-    //     }
-    // }, [retweetError]);
     const onLike = useCallback(() => {
         if (!id) {
             return alert("로그인이 필요합니다."); //로그인을 하지 않았다면 알림 띄우고 return
