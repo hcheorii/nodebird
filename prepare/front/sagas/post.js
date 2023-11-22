@@ -41,7 +41,7 @@ function* likePost(action) {
         });
     } catch (err) {
         console.error(err);
-        put({ type: LIKE_POST_FAILURE, data: err.response.data });
+        yield put({ type: LIKE_POST_FAILURE, error: err.response.data });
     }
 }
 
@@ -58,7 +58,7 @@ function* unlikePost(action) {
         });
     } catch (err) {
         console.error(err);
-        put({ type: UNLIKE_POST_FAILURE, data: err.response.data });
+        yield put({ type: UNLIKE_POST_FAILURE, error: err.response.data });
     }
 }
 
@@ -79,7 +79,7 @@ function* addPost(action) {
         //내가 썼는지 확인하기 위함
     } catch (err) {
         console.error(err);
-        put({ type: ADD_POST_FAILURE, data: err.response.data });
+        yield put({ type: ADD_POST_FAILURE, error: err.response.data });
     }
 }
 
@@ -95,7 +95,7 @@ function* addComment(action) {
         yield put({ type: ADD_COMMENT_SUCCESS, data: result.data });
     } catch (err) {
         console.log(err);
-        put({ type: ADD_COMMENT_FAILURE, data: err.response.data });
+        yield put({ type: ADD_COMMENT_FAILURE, error: err.response.data });
     }
 }
 
@@ -114,7 +114,7 @@ function* removePost(action) {
         yield put({ type: REMOVE_POST_OF_ME, data: action.data });
     } catch (error) {
         console.error(error);
-        put({ type: REMOVE_POST_FAILURE, data: error.response.data });
+        yield put({ type: REMOVE_POST_FAILURE, error: error.response.data });
     }
 }
 
@@ -133,7 +133,7 @@ function* loadPosts(action) {
         });
     } catch (err) {
         console.error(err);
-        put({ type: LOAD_POSTS_FAILURE, data: err.response.data });
+        yield put({ type: LOAD_POSTS_FAILURE, error: err.response.data });
     }
 }
 
@@ -151,13 +151,13 @@ function* uploadImages(action) {
         });
     } catch (err) {
         console.error(err);
-        put({ type: UPLOAD_IMAGES_FAILURE, data: err.response.data });
+        yield put({ type: UPLOAD_IMAGES_FAILURE, error: err.response.data });
     }
 }
 
 //리트윗
 function retweetAPI(data) {
-    return axios.post(`/post/${data}retweet`); //data는 formdata다
+    return axios.post(`/post/${data}/retweet`); //data는 formdata다
 }
 
 function* retweet(action) {
@@ -169,7 +169,7 @@ function* retweet(action) {
         });
     } catch (err) {
         console.error(err);
-        put({ type: RETWEET_FAILURE, data: err.response.data });
+        yield put({ type: RETWEET_FAILURE, error: err.response.data });
     }
 }
 

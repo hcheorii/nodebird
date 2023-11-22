@@ -32,7 +32,7 @@ const FollowList = ({ header, data }) => {
                 </div>
             }
             bordered
-            dataSource={data} //profil.js에서 넘겨준 팔로우 목록
+            dataSource={data} //profile.js에서 넘겨준 팔로우 목록
             renderItem={(item) => (
                 <List.Item style={{ marginTop: 20 }}>
                     <Card

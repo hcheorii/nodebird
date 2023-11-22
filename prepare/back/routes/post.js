@@ -189,12 +189,10 @@ router.post(
 );
 
 router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
-    //:postId는 동적으로 바뀐다.
-    //POST /post/comment
-    // 보기에는 "/"로 되어있지만 실제로는 "/post"로 되어있다.
+    // POST /post/1/retweet
     try {
         const post = await Post.findOne({
-            //이 게시물이 진짜 있는지.
+            //게시글 찾기
             where: { id: req.params.postId },
             include: [
                 {
@@ -207,15 +205,66 @@ router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
             return res.status(403).send("존재하지 않는 게시글입니다.");
         }
         if (
-            req.user.id === post.UserId ||
-            (post.Retweet && post.Retweet.UserI === req.user.id)
+            req.user.id === post.UserId || //내 아이디가 게시글의 id와 같을 때(자기 게시글)
+            (post.Retweet && post.Retweet.UserId === req.user.id) //자신의글을 남이 리트윗 한 걸 리트윗
         ) {
-            //자기 게시글 리트윗 한거, 자기 게시글을 리트윗한걸 다시 리트윗하는거는 막겠다.
             return res.status(403).send("자신의 글은 리트윗할 수 없습니다.");
         }
-        const retweetTargetId = post.RetweetId || post.id; //남의글을 리트윗한 남의글은 가능.
-        res.status(201).json(fullComment);
+        const retweetTargetId = post.RetweetId || post.id; //어떤 아이디를 리트윗 할거냐
+        const exPost = await Post.findOne({
+            where: {
+                UserId: req.user.id,
+                RetweetId: retweetTargetId,
+            },
+        });
+        if (exPost) {
+            return res.status(403).send("이미 리트윗했습니다."); //같은 게시글을 두번 리트윗 x
+        }
+
+        const retweet = await Post.create({
+            UserId: req.user.id,
+            RetweetId: retweetTargetId,
+            content: "retweet",
+        });
+
+        const retweetWithPrevPost = await Post.findOne({
+            where: { id: retweet.id },
+            include: [
+                {
+                    model: Post,
+                    as: "Retweet",
+                    include: [
+                        {
+                            model: User,
+                            attributes: ["id", "nickname"],
+                        },
+                        {
+                            model: Image,
+                        },
+                    ],
+                },
+                {
+                    model: User,
+                    attributes: ["id", "nickname"],
+                },
+                {
+                    model: Image,
+                },
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ["id", "nickname"],
+                        },
+                    ],
+                },
+            ],
+        });
+        console.log(req.user.id);
+        res.status(201).json(retweetWithPrevPost);
     } catch (error) {
+        console.log(req.user.id);
         console.error(error);
         next(error);
     }

@@ -261,6 +261,7 @@ const reducer = (state = initialValue, action) =>
             case RETWEET_SUCCESS:
                 draft.retweetLoading = false;
                 draft.retweetDone = true;
+                draft.mainPosts.unshift(action.data);
                 break;
             case RETWEET_FAILURE:
                 draft.retweetLoading = false;
