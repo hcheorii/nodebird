@@ -10,10 +10,13 @@
     "license": "ISC",
     "dependencies": {
         "@ant-design/icons": "^5.2.6",
+        "@reduxjs/toolkit": "^1.9.7",
         "antd": "^4.24.14",
+        "axios": "^1.6.2",
         "cross-env": "^7.0.3",
         "immer": "^10.0.3",
         "next": "^9.5.5",
+        "next-redux-saga": "^4.1.2",
         "next-redux-wrapper": "^8.1.0",
         "react-slick": "^0.29.0",
         "redux": "^4.2.1",

@@ -34,6 +34,7 @@ const upload = multer({
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
     // 보기에는 "/"로 되어있지만 실제로는 "/post"로 되어있다.
     try {
+        
         const hashtags = req.body.content.match(/#[^\s#]+/g); //hashtag 정규식
         const post = await Post.create({
             content: req.body.content,
@@ -58,7 +59,7 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
                 const images = await Promise.all(
                     req.body.image.map((image) => Image.create({ src: image }))
                 );
-                await post.addImages(images);
+                await post.addImages(images); 
             } else {
                 const image = await Image.create({ src: req.body.image });
                 await post.addImages(image);

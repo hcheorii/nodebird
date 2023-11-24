@@ -1,7 +1,8 @@
 import { createWrapper } from "next-redux-wrapper";
 import reducer from "../reducers";
 import rootSaga from "../sagas";
-import { createStore, compose, applyMiddleware } from "redux";
+import { createStore } from "redux";
+import { compose, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 
@@ -23,6 +24,7 @@ const configureStore = () => {
             : composeWithDevTools(applyMiddleware(...middlewares)); //개발용
     const store = createStore(reducer, enhancer);
     store.sagaTask = sagaMiddleware.run(rootSaga);
+    console.log("Store created:", store); // 확인용 로그
 
     return store;
 };

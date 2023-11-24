@@ -5,6 +5,7 @@ import PostForm from "../components/PostForm";
 import { useEffect } from "react";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
 import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
+import wrapper from "../store/configureStore";
 const Home = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
@@ -15,15 +16,15 @@ const Home = () => {
             alert(retweetError);
         }
     }, [retweetError]);
+
     useEffect(() => {
         dispatch({
-            type: LOAD_MY_INFO_REQUEST, //유저정보 가져오기
+            type: LOAD_MY_INFO_REQUEST,
         });
         dispatch({
-            type: LOAD_POSTS_REQUEST, //게시물 불러오기
+            type: LOAD_POSTS_REQUEST,
         });
     }, []);
-
     useEffect(() => {
         function onScroll() {
             if (
@@ -33,7 +34,7 @@ const Home = () => {
             ) {
                 if (hasMorePost && !loadPostsLoading) {
                     //로딩중이지 않을때만 딱 한번
-                    const lastId = mainPosts[mainPosts.length - 1].id;
+                    const lastId = mainPosts[mainPosts.length - 1]?.id;
                     dispatch({
                         //새로운거 불러와라
                         type: LOAD_POSTS_REQUEST,
