@@ -50,7 +50,7 @@ const AppLayout = ({ children }) => {
                 </Col>
                 <Col xs={24} md={6}>
                     <a
-                        href="https://www.notion.so/React-NodeBird-SNS-a918234623d4474eb767134231443283"
+                        href="https://velog.io/@dlguscjf1028/posts"
                         target="_blank"
                         rel="noreferrer noopener"
                     >

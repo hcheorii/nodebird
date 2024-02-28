@@ -23,18 +23,30 @@ const PostForm = () => {
     }, [addPostDone]);
 
     const onSubmit = useCallback(() => {
-        if (!text || !text.trim()) {
-            return alert("게시글을 작성하세요.");
-        }
         const formData = new FormData();
-        imagePaths.forEach((p) => {
-            formData.append("image", p);
-        });
-        formData.append("content", text);
-        return dispatch({
-            type: ADD_POST_REQUEST, //이미지와 text둘다 보내주기
-            data: formData,
-        });
+        if (!text || !text.trim()) {
+            if ((formData, length !== 0)) {
+                imagePaths.forEach((p) => {
+                    formData.append("image", p);
+                });
+                formData.append("content", text);
+                return dispatch({
+                    type: ADD_POST_REQUEST, //이미지와 text둘다 보내주기
+                    data: formData,
+                });
+            }
+            return alert("게시글을 작성하세요.");
+        } else {
+            imagePaths.forEach((p) => {
+                formData.append("image", p);
+            });
+            formData.append("content", text);
+            return dispatch({
+                type: ADD_POST_REQUEST, //이미지와 text둘다 보내주기
+                data: formData,
+            });
+        }
+
         // setText(""); //여기서 이렇게 초기화해줄 경우에 서버쪽에서 응답으로 오류가 났을때 게시물이 잘 올라가지 않았음에도 초기화되어버림.
         //그래서 위에 useEffect부분을 따로 작성해줌.
         // dispatch(addPost(text));
@@ -98,7 +110,7 @@ const PostForm = () => {
                     <div key={v} style={{ display: "inline-block" }}>
                         <img
                             src={`http://localhost:3065/${v}`}
-                            style={{ width: "200px" }}
+                            style={{ width: "100%" }}
                             alt={v}
                         />
                         <div>
